@@ -7,12 +7,15 @@
 
 import Foundation
 import FirebaseDatabase
+import Combine 
 
 enum LocationManagerError: Error {
     case failedReceivingFriendsEmails
 }
 
-class FirebaseLocationManager {
+class FriendsLocationAndChatManager {
+
+    static let shared = FriendsLocationAndChatManager()
 
     let database = Database.database().reference()
 
@@ -26,40 +29,36 @@ class FirebaseLocationManager {
         }
     }
 
-    var friends: [User]? {
+    @Published var generalFriends: [User]? {
         didSet {
-            serialQueue.async {
-                self.setupObserver()
-            }
+            self.setupObserver()
         }
     }
 
     var userLocationUpdate: User? {
         didSet {
             locationUpdateForActiveUser?(userLocationUpdate ?? User(name: "", email: ""))
-            print("\(userLocationUpdate?.location) \(userLocationUpdate?.name)")
+//            print("\(userLocationUpdate?.location) \(userLocationUpdate?.name)")
         }
     }
 
     var locationUpdateForActiveUser: ((User) -> ())?
 
-    init() {
+    private init() {
         self.obtainEmails()
     }
 
 
     func obtainEmails() {
-        serialQueue.async {
-            RealTimeDataBaseManager.shared.getEmailFriends { result in
-                print("\(Thread.current) obtainEmails")
-                switch result {
-                case .success(let emails):
-                    self.friendsEmail = emails
-                case .failure(let error):
-                    print("не удалось получить емайлы друзей, error: \(error)")
-                }
+        RealTimeDataBaseManager.shared.getEmailFriends { result in
+            switch result {
+            case .success(let emails):
+                self.friendsEmail = emails
+            case .failure(let error):
+                print("не удалось получить емайлы друзей, error: \(error)")
             }
         }
+
     }
 
     func obtainFriends(emails: [String]) {
@@ -80,12 +79,12 @@ class FirebaseLocationManager {
             }
         }
         dispatchGroup.notify(queue: serialQueue) {
-            self.friends = users
+            self.generalFriends = users
         }
     }
 
     func setupObserver() {
-        guard let friends = self.friends else {
+        guard let friends = self.generalFriends else {
             return
         }
         for friend in friends {

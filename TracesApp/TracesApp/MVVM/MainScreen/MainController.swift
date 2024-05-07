@@ -7,6 +7,7 @@
 
 import UIKit
 import MapKit
+import SwiftUI
 
 class MainController: UIViewController {
 
@@ -16,7 +17,6 @@ class MainController: UIViewController {
     private var userRegion: MKCoordinateRegion?
     private var profile: User?
     private var profileAnnotationView: AnnotationView?
-    private let firebaseLocationManager = FirebaseLocationManager()
 
 
     override func viewDidLoad() {
@@ -65,7 +65,7 @@ class MainController: UIViewController {
     private var friendAnnotations = [String: UserAnnotation]()
 
     private func obtainAndShowFriends() {
-        firebaseLocationManager.locationUpdateForActiveUser = { friend in
+        FriendsLocationAndChatManager.shared.locationUpdateForActiveUser = { friend in
             if let location = friend.location,
                let latitude = location["latitude"],
                let longitude = location["longitude"] {
@@ -115,7 +115,10 @@ extension MainController: MainViewDelegate {
     func didTappedButtonWorld() { }
 
     
-    func didTappedButtonMessages() { }
+    func didTappedButtonMessages() {
+        let chatController = UIHostingController(rootView: ChatSUIView())
+        present(chatController, animated: true)
+    }
 }
 
 

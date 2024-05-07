@@ -155,13 +155,11 @@ extension RealTimeDataBaseManager {
         }
         let safeEmail = RealTimeDataBaseManager.safeEmail(emailAddress: email)
         database.child(safeEmail).child("friends").observeSingleEvent(of: .value) { snapshot in
-            DispatchQueue.global(qos: .default).async {
                 if let friends = snapshot.value as? [String] {
                     completion(.success(friends))
                 } else {
                     completion(.failure(LocationManagerError.failedReceivingFriendsEmails))
                 }
-            }
         }
     }
 

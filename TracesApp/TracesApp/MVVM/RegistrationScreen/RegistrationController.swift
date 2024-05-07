@@ -51,11 +51,16 @@ extension RegistrationController: RegistrationViewDelegate {
                                      registrationView?.passwordTextField.text,
                                      registrationView?.secondPasswordTextField.text,
                                      registrationView?.avatarImageView.image,
-                                     completion: { [ weak self ] boolResult, message in
-            DispatchQueue.main.async {
-                if boolResult {
+                                     completion: { [ weak self ] profile, message in
+            if let user = profile {
+                self?.viewModel?.setProfileInDatabase(user: user)
+                self?.viewModel?.uploadAvatarImage(user: user)
+                doInMainThread {
                     self?.registrationControllerCoordinator?.dismissToLastVC()
-                } else {
+                }
+
+            } else {
+                doInMainThread {
                     self?.alertUserLoginError(message: message)
                 }
             }

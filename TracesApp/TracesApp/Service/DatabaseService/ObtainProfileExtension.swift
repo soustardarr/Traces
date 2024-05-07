@@ -11,29 +11,25 @@ extension RealTimeDataBaseManager {
 
     //MARK: ПОЛУЧЕНИЕ ИНФОРМАЦИИ О СВОЕМ ПРОФИЛЕ
     public func getProfileInfo(safeEmail: String, completionHandler: @escaping (Result<User, Error>) -> ()) {
-        print("111 \(Thread.current)")
         self.database.child(safeEmail).observeSingleEvent(of: .value) { snapshot in
-            DispatchQueue.global(qos: .default).async {
-                print("222 \(Thread.current)")
-                if let userDict = snapshot.value as? [String: Any],
-                   let userName = userDict["name"] as? String,
-                   let userEmail = userDict["email"] as? String {
-                    StorageManager.shared.downloadAvatarDataSelfProfile(safeEmail) { data in
-                        print("\(Thread.current) StorageManager StorageManager")
-                        if data != nil {
-                            let user = User(name: userName, email: userEmail, profilePicture: data)
-                            completionHandler(.success(user))
-                        } else {
-                            print("получен профиль без фото")
-                            let user = User(name: userName, email: userEmail)
-                            completionHandler(.success(user))
-                        }
+            if let userDict = snapshot.value as? [String: Any],
+               let userName = userDict["name"] as? String,
+               let userEmail = userDict["email"] as? String {
+                StorageManager.shared.downloadAvatarDataSelfProfile(safeEmail) { data in
+                    if data != nil {
+                        let user = User(name: userName, email: userEmail, profilePicture: data)
+                        completionHandler(.success(user))
+                    } else {
+                        print("получен профиль без фото")
+                        let user = User(name: userName, email: userEmail)
+                        completionHandler(.success(user))
                     }
-                } else {
-                    completionHandler(.failure(RealTimeDataBaseError.failedProfile))
-                    print("Неизвестный формат снимка данных")
                 }
+            } else {
+                completionHandler(.failure(RealTimeDataBaseError.failedProfile))
+                print("Неизвестный формат снимка данных")
             }
+
         }
     }
 

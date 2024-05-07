@@ -38,9 +38,13 @@ extension AuthorizationController: AuthorizationViewDelegate {
     func didLoginButtonTapped(email: String, password: String) {
         authorizationViewModel?.didLoginAccount(email, password, completion: { [ weak self ] boolResult in
             if boolResult {
-                self?.authorizationControllerCoordinator?.runMainScreen()
+                doInMainThread {
+                    self?.authorizationControllerCoordinator?.runMainScreen()
+                }
             } else {
-                self?.alertUserLoginError()
+                doInMainThread {
+                    self?.alertUserLoginError()
+                }
             }
         })
     }

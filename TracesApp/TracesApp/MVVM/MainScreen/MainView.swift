@@ -85,6 +85,7 @@ class MainView: UIView {
         let colorConfig = UIImage.SymbolConfiguration(paletteColors: [.black, .white])
         let messagesImage = UIImage(systemName: "message.circle.fill", withConfiguration: colorConfig)
         buttonMessages.image = messagesImage
+        buttonMessages.isUserInteractionEnabled = true
         buttonMessages.translatesAutoresizingMaskIntoConstraints = false
         return buttonMessages
     }()
@@ -132,6 +133,13 @@ class MainView: UIView {
 
         let gestureLocation = UITapGestureRecognizer(target: self, action: #selector(didTapLocationButton))
         buttonLocation.addGestureRecognizer(gestureLocation)
+
+        let gestureChat = UITapGestureRecognizer(target: self, action: #selector(didTapChatButton))
+        buttonMessages.addGestureRecognizer(gestureChat)
+    }
+
+    @objc private func didTapChatButton() {
+        delegate?.didTappedButtonMessages()
     }
 
     @objc private func didTapLocationButton() {

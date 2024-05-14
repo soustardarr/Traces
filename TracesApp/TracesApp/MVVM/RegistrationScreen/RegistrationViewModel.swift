@@ -50,13 +50,14 @@ class RegistrationViewModel {
         }
     }
 
-    func setProfileInDatabase(user: User) {
+    func setProfileInRealtimeDatabase(user: User) {
         RealTimeDataBaseManager.shared.insertUser(with: user) { result in
             if result {
                 print("успешная вставка юзера в бд")
             }
         }
     }
+
 
     func uploadAvatarImage(user: User) {
         StorageManager.shared.uploadImage(with: user.profilePicture ?? Data(), fileName: user.profilePictureFileName) { result in

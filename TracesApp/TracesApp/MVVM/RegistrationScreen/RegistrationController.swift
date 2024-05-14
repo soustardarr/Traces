@@ -52,16 +52,18 @@ extension RegistrationController: RegistrationViewDelegate {
                                      registrationView?.secondPasswordTextField.text,
                                      registrationView?.avatarImageView.image,
                                      completion: { [ weak self ] profile, message in
+            guard let strongSelf = self else { return }
             if let user = profile {
-                self?.viewModel?.setProfileInDatabase(user: user)
-                self?.viewModel?.uploadAvatarImage(user: user)
+                strongSelf.viewModel?.setProfileInRealtimeDatabase(user: user)
+                strongSelf.viewModel?.uploadAvatarImage(user: user)
+//                strongSelf.viewModel?.setProfileInFirestore(user: user)
                 doInMainThread {
-                    self?.registrationControllerCoordinator?.dismissToLastVC()
+                    strongSelf.registrationControllerCoordinator?.dismissToLastVC()
                 }
 
             } else {
                 doInMainThread {
-                    self?.alertUserLoginError(message: message)
+                    strongSelf.alertUserLoginError(message: message)
                 }
             }
         })

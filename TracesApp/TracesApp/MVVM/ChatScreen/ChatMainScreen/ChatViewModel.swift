@@ -1,5 +1,5 @@
 //
-//  NewChatViewModel.swift
+//  ChatViewModel.swift
 //  TracesApp
 //
 //  Created by Ruslan Kozlov on 07.05.2024.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class NewChatViewModel: ObservableObject {
+class ChatViewModel: ObservableObject {
 
     @Published var friends: [User]?
     private var cancellable: Set<AnyCancellable> = []
@@ -46,5 +46,6 @@ class NewChatViewModel: ObservableObject {
             print("Ошибка чтения файла: \(error)")
         }
     }
+
 
 }

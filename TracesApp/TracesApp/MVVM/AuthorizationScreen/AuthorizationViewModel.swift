@@ -26,7 +26,9 @@ class AuthorizationViewModel {
                 completion(false)
                 return
             }
+            let safeEmail = RealTimeDataBaseManager.safeEmail(emailAddress: login)
             UserDefaults.standard.set(login, forKey: "email")
+            UserDefaults.standard.set(safeEmail, forKey: "safeEmail")
             completion(true)
         }
 

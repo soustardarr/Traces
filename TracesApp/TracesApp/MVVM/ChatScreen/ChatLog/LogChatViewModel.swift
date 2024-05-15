@@ -68,6 +68,9 @@ class LogChatViewModel: ObservableObject {
             if let error = error {
                 self.errorMessage = "ошибка сохранения сообщения firestore: \(error)"
             }
+
+            self.safeLastMessage()
+
             self.textField = ""
             self.count += 1
         }
@@ -83,8 +86,47 @@ class LogChatViewModel: ObservableObject {
                 self.errorMessage = "ошибка сохранения сообщения firestore: \(error)"
             }
         }
+    }
 
 
+    private func safeLastMessage() {
+
+        guard let fromEmail = UserDefaults.standard.string(forKey: "safeEmail") else { return }
+        guard let toEmail = user?.safeEmail else { return }
+
+        let document = FirestoreManager.shared.firestore
+            .collection("last_messages")
+            .document(fromEmail)
+            .collection("messages")
+            .document(toEmail)
+
+        let data = [FirebaseConstants.timestamp: Timestamp(), FirebaseConstants.text: self.textField, FirebaseConstants.fromUserEmail: fromEmail, FirebaseConstants.toUserEmail: toEmail ] as [String: Any]
+
+        document.setData(data) { error in
+            if let error = error {
+                self.errorMessage = "не удалось сохранить last_messaage: \(error)"
+                print("не удалось сохранить last_messaage: \(error)")
+                return
+            }
+        }
+
+        let documentForInterlocutor = FirestoreManager.shared.firestore
+            .collection("last_messages")
+            .document(toEmail)
+            .collection("messages")
+            .document(fromEmail)
+
+        let dataForInterlocutor = [FirebaseConstants.timestamp: Timestamp(), FirebaseConstants.text: self.textField, FirebaseConstants.fromUserEmail: fromEmail, FirebaseConstants.toUserEmail: toEmail, FirebaseConstants.readIt: 0 ] as [String: Any]
+
+        documentForInterlocutor.setData(data) { error in
+            if let error = error {
+                self.errorMessage = "не удалось сохранить last_messaage: \(error)"
+                print("не удалось сохранить last_messaage: \(error)")
+                return
+            }
+        }
 
     }
+
+
 }

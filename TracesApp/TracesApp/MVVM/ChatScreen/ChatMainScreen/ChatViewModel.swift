@@ -10,42 +10,53 @@ import Combine
 
 class ChatViewModel: ObservableObject {
 
-    @Published var friends: [User]?
+
+    @Published var friends: [User] = []
+    @Published var lastMessages = [LastMessage]()
+    @Published var readIt: Bool?
+
     private var cancellable: Set<AnyCancellable> = []
     var arrayPhrases: [String] = []
 
     init() {
-        self.obtainPhrases()
         FriendsLocationAndChatManager.shared.$generalFriends.receive(on: DispatchQueue.main).sink { [weak self] users in
             if let users = users {
                 self?.friends = users
+                self?.fetchLastMessage()
             } else {
-                self?.obtainFriends()
+//                self?.obtainFriends()
+                //отобрази hud или марку "нет друзей" в завсисмости от статуса
             }
         }.store(in: &cancellable)
     }
 
-    func obtainFriends() {
-        FriendsLocationAndChatManager.shared.obtainEmails()
-        FriendsLocationAndChatManager.shared.$generalFriends.receive(on: DispatchQueue.main).sink { [ weak self ]  users in
-            if let users = users {
-                self?.friends = users
-            }
-        }.store(in: &cancellable)
-    }
+    private func fetchLastMessage() {
+        guard let selfSafeEmail = UserDefaults.standard.string(forKey: "safeEmail") else { return }
+        FirestoreManager.shared.firestore
+            .collection("last_messages")
+            .document(selfSafeEmail)
+            .collection("messages")
+            .order(by: "timestamp")
+            .addSnapshotListener { querySnapshot, error in
+                if let error = error {
+                    print("не удалось получить послденее сообщение: \(error)")
+                    return
+                }
+                querySnapshot?.documentChanges.forEach({ change in
+                    let lastMessage = LastMessage(documentId: change.document.documentID, data: change.document.data())
+                    if let index = self.friends.firstIndex(where: { $0.safeEmail == lastMessage.toUserEmail }) {
+                        self.friends[index].lastMessage = lastMessage
+                        let friend = self.friends.remove(at: index)
+                        self.friends.insert(friend, at: 0)
+                    } else if let index = self.friends.firstIndex(where: { $0.safeEmail == lastMessage.fromUserEmail }) {
+                        self.friends[index].lastMessage = lastMessage
+                        print(lastMessage)
+                        let friend = self.friends.remove(at: index)
+                        self.friends.insert(friend, at: 0)
+                    }
+                })
 
-    func obtainPhrases() {
-        let path = "/Users/ruslankozlov/git/RerositoryTraces/Traces/TracesApp/TracesApp/Supporting Files/phrases.txt"
-        do {
-            let fileContents = try String(contentsOfFile: path, encoding: .utf8)
-            let lines = fileContents.components(separatedBy: .newlines)
-            for line in lines {
-                arrayPhrases.append(line)
             }
-        } catch {
-            print("Ошибка чтения файла: \(error)")
-        }
     }
-
 
 }

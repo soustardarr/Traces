@@ -24,4 +24,6 @@ struct FirebaseConstants {
     static let fromUserEmail = "fromUserEmail"
     static let toUserEmail = "toUserEmail"
     static let text = "text"
+    static let timestamp = "timestamp"
+    static let readIt = "readIt"
 }

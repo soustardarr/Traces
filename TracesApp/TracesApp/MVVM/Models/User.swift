@@ -23,5 +23,6 @@ struct User: Identifiable {
     var followers: [String]?
     var subscriptions: [String]?
     var location: [String: Double]?
+    var lastMessage: LastMessage?
 
 }

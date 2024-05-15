@@ -36,7 +36,7 @@ struct ChatSUIView: View {
 
     var messagesView: some View {
         ScrollView {
-            ForEach(viewModel.friends ?? []) { user in
+            ForEach(viewModel.friends) { user in
                 VStack {
                     NavigationLink {
                         LogChatSUIView(user: user)
@@ -51,29 +51,25 @@ struct ChatSUIView: View {
                                     HStack {
                                         Text(user.name)
                                             .font(.system(size: 16, weight: .bold))
-                                        Circle()
-                                            .frame(height: 8)
-                                            .foregroundStyle(.green)
+                                            .foregroundStyle(.black)
+//                                        Circle()
+//                                            .frame(height: 8)
+//                                            .foregroundStyle(.green)
                                     }
-                                    Text(viewModel.arrayPhrases.randomElement() ?? "")
+                                    Text(user.lastMessage?.text ?? "Начните общение!")
                                         .font(.system(size: 12, weight: .light))
                                         .frame(alignment: .leading)
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 Spacer()
                                 VStack() {
-
-                                    Text("17.00")
-                                        .font(.system(size: 12, weight: .ultraLight))
-                                    Spacer()
-                                    Circle().frame(height: 20)
-                                        .foregroundStyle(.gray)
-                                        .overlay {
-                                            Text("23")
-                                                .font(.system(size: 10))
-                                                .foregroundColor(.black)
+                                    if let readIt = user.lastMessage?.readIt {
+                                        if readIt {
+                                            Circle().frame(height: 10)
+                                                .foregroundStyle(.blue)
                                         }
-                                    Spacer()
+                                    }
                                 }
 
                             }

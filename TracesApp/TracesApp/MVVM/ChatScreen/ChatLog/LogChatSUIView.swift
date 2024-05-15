@@ -39,7 +39,6 @@ struct LogChatSUIView: View {
                     }
                     HStack { Spacer() }
                         .id("Empty")
-
                 }
                 .id("Empty")
                 .onReceive(viewModel.$count, perform: { _ in

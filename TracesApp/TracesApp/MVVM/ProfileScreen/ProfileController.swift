@@ -14,10 +14,13 @@ class ProfileController: UIViewController {
     private var profileViewModel: ProfileViewModel?
     private var profileArray = ["друзья", "подписчики", "истории", "выйти из аккаунта"]
     private var profile: User?
+    var profileUrl: String?
 
     init(user: User) {
         super.init(nibName: nil, bundle: nil)
         self.profile = user
+        let safeEmail = UserDefaults.standard.string(forKey: "safeEmail") ?? ""
+        self.profileUrl = "traces://openProfile?safeEmail=\(safeEmail)"
     }
     
     required init?(coder: NSCoder) {
@@ -32,12 +35,12 @@ class ProfileController: UIViewController {
     }
 
     private func obtainProfile() {
-        guard let email = UserDefaults.standard.string(forKey: "email") else {
+        guard let email = UserDefaults.standard.string(forKey: "safeEmail") else {
             print("Не удалось получить emil из UserDefaults, он ПУСТ")
             return
         }
-        let safeEmail = RealTimeDataBaseManager.safeEmail(emailAddress: email)
-        RealTimeDataBaseManager.shared.getProfileInfo(safeEmail: safeEmail) { result in
+        self.profileUrl = "traces://openProfile?safeEmail=\(email)"
+        RealTimeDataBaseManager.shared.getProfileInfo(safeEmail: email) { result in
             switch result {
             case .success(let user):
                 doInMainThread {
@@ -59,6 +62,7 @@ class ProfileController: UIViewController {
         profileView?.tableView.dataSource = self
         profileView?.tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.reuseIdentifier)
         headerView = HeaderView()
+        headerView?.delegate = self
         headerView?.avatarImageView.image = UIImage(data: profile?.profilePicture ?? Data())
         headerView?.nameLabel.text = profile?.name
         profileViewModel = ProfileViewModel()
@@ -114,7 +118,7 @@ extension ProfileController: UITableViewDelegate {
 
 extension ProfileController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        300
+        400
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -138,3 +142,15 @@ extension ProfileController: UITableViewDataSource {
 
 }
 
+extension ProfileController: HeaderViewDelegate {
+    func didTappedShareProfile() {
+        let controller = UIAlertController(title: "Ссылка скопированна", message: "Поделись с другом!", preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "ок", style: .cancel))
+        guard let url = profileUrl else {
+            print("дождись загрузки профиля")
+            return
+        }
+        UIPasteboard.general.string = url
+        present(controller, animated: true)
+    }
+}

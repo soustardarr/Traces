@@ -24,7 +24,7 @@ class ChatViewModel: ObservableObject {
                 self?.friends = users
                 self?.fetchLastMessage()
             } else {
-//                self?.obtainFriends()
+                //self?.obtainFriends()
                 //отобрази hud или марку "нет друзей" в завсисмости от статуса
             }
         }.store(in: &cancellable)

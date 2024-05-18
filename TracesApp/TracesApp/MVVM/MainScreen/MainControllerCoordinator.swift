@@ -21,5 +21,13 @@ class MainControllerCoordinator: BaseCoordinator {
         mainController.mainControllerCoordinator = self
         navigationController.pushViewController(mainController, animated: true)
     }
+    
+    override func startWithDeeplinkVC(_ viewController: UIViewController) {
+        let mainController = MainController(deepLinkVC: viewController)
+        mainController.mainControllerCoordinator = self
+        navigationController.pushViewController(mainController, animated: true)
+        
+    }
+
 
 }

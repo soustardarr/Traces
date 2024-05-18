@@ -14,14 +14,12 @@ class PeopleProfileController: UIViewController {
     private var peopleProfileViewModel: PeopleProfileViewModel?
     private var avatarimage: UIImage
     private var currentUser: User
-    private var indexPath: IndexPath
     private var cancellable: Set<AnyCancellable> = []
 
 
-    init(avatarimage: UIImage, currentUser: User, indexPath: IndexPath) {
+    init(avatarimage: UIImage, currentUser: User) {
         self.avatarimage = avatarimage
         self.currentUser = currentUser
-        self.indexPath = indexPath
         super.init(nibName: nil, bundle: nil)
         peopleProfileView = PeopleProfileView()
         peopleProfileView?.delegate = self

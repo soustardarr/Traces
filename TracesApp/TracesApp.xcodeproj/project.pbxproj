@@ -17,6 +17,10 @@
 		7C2D6F882BF397EE00C2BEC3 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F872BF397EE00C2BEC3 /* FirestoreManager.swift */; };
 		7C2D6F8A2BF3C08600C2BEC3 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F892BF3C08600C2BEC3 /* Message.swift */; };
 		7C2D6F8C2BF4EA4F00C2BEC3 /* LastMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F8B2BF4EA4F00C2BEC3 /* LastMessage.swift */; };
+		7C2D6F912BF8012600C2BEC3 /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F902BF8012600C2BEC3 /* WeatherManager.swift */; };
+		7C2D6F982BF84BBE00C2BEC3 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 7C2D6F972BF84BBE00C2BEC3 /* Alamofire */; };
+		7C2D6F9A2BF84BBE00C2BEC3 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 7C2D6F992BF84BBE00C2BEC3 /* AlamofireDynamic */; };
+		7C2D6F9C2BF84BDB00C2BEC3 /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F9B2BF84BDB00C2BEC3 /* WeatherData.swift */; };
 		7C66E09C2BE1093F0049E75C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66E09B2BE1093F0049E75C /* AppDelegate.swift */; };
 		7C66E09E2BE1093F0049E75C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66E09D2BE1093F0049E75C /* SceneDelegate.swift */; };
 		7C66E0A02BE1093F0049E75C /* AuthorizationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66E09F2BE1093F0049E75C /* AuthorizationController.swift */; };
@@ -100,6 +104,8 @@
 		7C2D6F872BF397EE00C2BEC3 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		7C2D6F892BF3C08600C2BEC3 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		7C2D6F8B2BF4EA4F00C2BEC3 /* LastMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastMessage.swift; sourceTree = "<group>"; };
+		7C2D6F902BF8012600C2BEC3 /* WeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherManager.swift; sourceTree = "<group>"; };
+		7C2D6F9B2BF84BDB00C2BEC3 /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		7C66E0982BE1093F0049E75C /* TracesApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TracesApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C66E09B2BE1093F0049E75C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7C66E09D2BE1093F0049E75C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -158,6 +164,7 @@
 				7C66E0BB2BE24CE90049E75C /* FirebaseAnalytics in Frameworks */,
 				7C66E0BD2BE24CE90049E75C /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				7C66E0E32BE24CE90049E75C /* FirebaseMLModelDownloader in Frameworks */,
+				7C2D6F9A2BF84BBE00C2BEC3 /* AlamofireDynamic in Frameworks */,
 				7C66E0D72BE24CE90049E75C /* FirebaseFirestoreSwift in Frameworks */,
 				7C66E1372BE3D2D20049E75C /* JGProgressHUD in Frameworks */,
 				7C66E0C32BE24CE90049E75C /* FirebaseAppCheck in Frameworks */,
@@ -172,6 +179,7 @@
 				7C66E0E92BE24CE90049E75C /* FirebaseRemoteConfig in Frameworks */,
 				7C66E0C52BE24CE90049E75C /* FirebaseAppDistribution-Beta in Frameworks */,
 				7C66E0C92BE24CE90049E75C /* FirebaseAuthCombine-Community in Frameworks */,
+				7C2D6F982BF84BBE00C2BEC3 /* Alamofire in Frameworks */,
 				7C66E0E72BE24CE90049E75C /* FirebasePerformance in Frameworks */,
 				7C66E0DF2BE24CE90049E75C /* FirebaseInAppMessagingSwift-Beta in Frameworks */,
 				7C66E0ED2BE24CE90049E75C /* FirebaseStorage in Frameworks */,
@@ -302,6 +310,7 @@
 				7C2D6F862BF397BD00C2BEC3 /* FirestoreDatabase */,
 				7C66E10D2BE254B60049E75C /* RealtimeDatabase */,
 				7C66E10E2BE254D60049E75C /* StorageService */,
+				7C2D6F902BF8012600C2BEC3 /* WeatherManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -336,6 +345,7 @@
 				7C2D6F6A2BE51DA800C2BEC3 /* UserAnnotation.swift */,
 				7C2D6F892BF3C08600C2BEC3 /* Message.swift */,
 				7C2D6F8B2BF4EA4F00C2BEC3 /* LastMessage.swift */,
+				7C2D6F9B2BF84BDB00C2BEC3 /* WeatherData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -450,6 +460,8 @@
 				7C66E0EC2BE24CE90049E75C /* FirebaseStorage */,
 				7C66E0EE2BE24CE90049E75C /* FirebaseStorageCombine-Community */,
 				7C66E1362BE3D2D20049E75C /* JGProgressHUD */,
+				7C2D6F972BF84BBE00C2BEC3 /* Alamofire */,
+				7C2D6F992BF84BBE00C2BEC3 /* AlamofireDynamic */,
 			);
 			productName = TracesApp;
 			productReference = 7C66E0982BE1093F0049E75C /* TracesApp.app */;
@@ -482,6 +494,7 @@
 			packageReferences = (
 				7C66E0B92BE24CE90049E75C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				7C66E1352BE3D2D20049E75C /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
+				7C2D6F962BF84BBE00C2BEC3 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 7C66E0992BE1093F0049E75C /* Products */;
 			projectDirPath = "";
@@ -517,6 +530,7 @@
 				7C66E1102BE254F70049E75C /* StorageManager.swift in Sources */,
 				7C2D6F6D2BEA3CE100C2BEC3 /* ChatSUIView.swift in Sources */,
 				7C2D6F6B2BE51DA800C2BEC3 /* UserAnnotation.swift in Sources */,
+				7C2D6F9C2BF84BDB00C2BEC3 /* WeatherData.swift in Sources */,
 				7C66E11A2BE25B580049E75C /* MainControllerCoordinator.swift in Sources */,
 				7C66E0A02BE1093F0049E75C /* AuthorizationController.swift in Sources */,
 				7C66E0FF2BE251C60049E75C /* RegistrationControllerCoordinator.swift in Sources */,
@@ -535,6 +549,7 @@
 				7C2D6F8C2BF4EA4F00C2BEC3 /* LastMessage.swift in Sources */,
 				7C66E10A2BE253370049E75C /* RealTimeDataBaseManager.swift in Sources */,
 				7C66E1272BE273F30049E75C /* ProfileViewModel.swift in Sources */,
+				7C2D6F912BF8012600C2BEC3 /* WeatherManager.swift in Sources */,
 				7C2D6F882BF397EE00C2BEC3 /* FirestoreManager.swift in Sources */,
 				7C66E1032BE2522C0049E75C /* RegistrationView.swift in Sources */,
 				7C66E0F32BE24ED90049E75C /* BaseCoordinator.swift in Sources */,
@@ -789,6 +804,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		7C2D6F962BF84BBE00C2BEC3 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
 		7C66E0B92BE24CE90049E75C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -808,6 +831,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		7C2D6F972BF84BBE00C2BEC3 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7C2D6F962BF84BBE00C2BEC3 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		7C2D6F992BF84BBE00C2BEC3 /* AlamofireDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7C2D6F962BF84BBE00C2BEC3 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = AlamofireDynamic;
+		};
 		7C66E0BA2BE24CE90049E75C /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 7C66E0B92BE24CE90049E75C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

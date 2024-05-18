@@ -50,11 +50,13 @@ class AnnotationView: UIView {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         return nameLabel
     }()
-
+//?????????
     init(name: String, image: Data) {
         super.init(frame: .zero)
-        self.nameLabel.text = name
-        self.avatarImageView.image = UIImage(data: image)
+        doInMainThread {
+            self.nameLabel.text = name
+            self.avatarImageView.image = UIImage(data: image)
+        }
         setup()
     }
 

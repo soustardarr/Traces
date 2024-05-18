@@ -38,7 +38,6 @@ class FriendsViewModel {
         guard hasFetched else {
             return
         }
-//        let selfUser = CoreDataManager.shared.obtainSavedProfileInfo()
         let email = UserDefaults.standard.string(forKey: "email") ?? ""
         let safeEmail  = RealTimeDataBaseManager.safeEmail(emailAddress: email)
         var resultUsers: [User] = self.users.filter {

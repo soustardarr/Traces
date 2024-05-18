@@ -9,19 +9,22 @@ import Foundation
 
 extension RealTimeDataBaseManager {
 
-    //MARK: ПОЛУЧЕНИЕ ИНФОРМАЦИИ О СВОЕМ ПРОФИЛЕ
+    //MARK: ПОЛУЧЕНИЕ ИНФОРМАЦИИ ПРОФИЛЕ
     public func getProfileInfo(safeEmail: String, completionHandler: @escaping (Result<User, Error>) -> ()) {
         self.database.child(safeEmail).observeSingleEvent(of: .value) { snapshot in
             if let userDict = snapshot.value as? [String: Any],
                let userName = userDict["name"] as? String,
-               let userEmail = userDict["email"] as? String {
+               let userEmail = userDict["email"] as? String,
+               let friends = userDict["friends"] as? [String],
+               let followers = userDict["followers"] as? [String],
+               let subscriptions = userDict["subscriptions"] as? [String] {
                 StorageManager.shared.downloadAvatarDataSelfProfile(safeEmail) { data in
                     if data != nil {
-                        let user = User(name: userName, email: userEmail, profilePicture: data)
+                        let user = User(name: userName, email: userEmail, profilePicture: data, friends: friends, followers: followers, subscriptions: subscriptions)
                         completionHandler(.success(user))
                     } else {
                         print("получен профиль без фото")
-                        let user = User(name: userName, email: userEmail)
+                        let user = User(name: userName, email: userEmail, friends: friends, followers: followers, subscriptions: subscriptions)
                         completionHandler(.success(user))
                     }
                 }

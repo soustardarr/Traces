@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class BaseCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
@@ -13,4 +14,6 @@ class BaseCoordinator: Coordinator {
     func start() {
         fatalError("каждый наследник должен иметь этот метод")
     }
+
+    func startWithDeeplinkVC(_ viewController: UIViewController) { }
 }

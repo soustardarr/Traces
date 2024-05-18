@@ -136,7 +136,7 @@ extension FriendsController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         if let cell = tableView.cellForRow(at: indexPath) as? FriendsViewCell {
             guard let avatarImage = cell.avatarImageView.image else { return }
-            let vc = PeopleProfileController(avatarimage: avatarImage, currentUser: results[indexPath.row], indexPath: indexPath)
+            let vc = PeopleProfileController(avatarimage: avatarImage, currentUser: results[indexPath.row])
             self.present(vc, animated: true)
         }
     }

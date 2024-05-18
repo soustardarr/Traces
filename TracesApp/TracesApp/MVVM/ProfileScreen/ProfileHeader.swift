@@ -8,8 +8,7 @@
 import UIKit
 
 protocol HeaderViewDelegate: AnyObject {
-//    func didTappedSignOutButton()
-//    func didTappedCreatePublication()
+    func didTappedShareProfile()
 }
 
 class HeaderView: UITableViewHeaderFooterView {
@@ -44,14 +43,21 @@ class HeaderView: UITableViewHeaderFooterView {
         return nameLabel
     }()
 
-    var createPublicationButton: UIImageView = {
-        let addPublicationButton = UIImageView()
-        let colorConfig = UIImage.SymbolConfiguration(paletteColors: [.black])
-        let settingsImage = UIImage(systemName: "pencil.tip.crop.circle.badge.plus", withConfiguration: colorConfig)
-        addPublicationButton.image = settingsImage
-        addPublicationButton.isUserInteractionEnabled = true
-        addPublicationButton.translatesAutoresizingMaskIntoConstraints = false
-        return addPublicationButton
+    lazy var shareProfileButton: UIButton = {
+        let shareProfileButton = UIButton()
+        shareProfileButton.setTitle(" поделись профилем!", for: .normal)
+        let colorConfig = UIImage.SymbolConfiguration(paletteColors: [.white])
+        let image = UIImage(systemName: "doc.on.doc", withConfiguration: colorConfig)
+        shareProfileButton.setImage(image, for: .normal)
+        shareProfileButton.contentHorizontalAlignment = .center
+        shareProfileButton.clipsToBounds = true
+        shareProfileButton.layer.cornerRadius = 10
+        shareProfileButton.backgroundColor = .systemIndigo
+        shareProfileButton.translatesAutoresizingMaskIntoConstraints = false
+        shareProfileButton.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20)
+        let action = UIAction { _ in self.delegate?.didTappedShareProfile() }
+        shareProfileButton.addAction(action, for: .touchUpInside)
+        return shareProfileButton
     }()
 
     override init(reuseIdentifier: String?) {
@@ -63,27 +69,11 @@ class HeaderView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
 
-//    private func addGesture() {
-//        let exitGesture = UITapGestureRecognizer(target: self, action: #selector(handleExitGesture))
-//        exitButton.addGestureRecognizer(exitGesture)
-//
-//        let createGesture = UITapGestureRecognizer(target: self, action: #selector(handleCreateGesture))
-//        createPublicationButton.addGestureRecognizer(createGesture)
-//
-//    }
-//
-//    @objc private func handleExitGesture() {
-//        delegate?.didTappedSignOutButton()
-//    }
-//    @objc private func handleCreateGesture() {
-//        delegate?.didTappedCreatePublication()
-//    }
-
     private func setupUI() {
         contentView.addSubview(backgroundViewContainer)
         backgroundViewContainer.addSubview(nameLabel)
         backgroundViewContainer.addSubview(avatarImageView)
-        backgroundViewContainer.addSubview(createPublicationButton)
+        backgroundViewContainer.addSubview(shareProfileButton)
 
         NSLayoutConstraint.activate([
                 backgroundViewContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -99,12 +89,10 @@ class HeaderView: UITableViewHeaderFooterView {
                 nameLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 20),
                 nameLabel.centerXAnchor.constraint(equalTo: backgroundViewContainer.centerXAnchor),
 
-
-                createPublicationButton.topAnchor.constraint(equalTo: backgroundViewContainer.safeAreaLayoutGuide.topAnchor),
-                createPublicationButton.trailingAnchor.constraint(equalTo: backgroundViewContainer.trailingAnchor, constant: -30),
-                createPublicationButton.heightAnchor.constraint(equalToConstant: 33),
-                createPublicationButton.widthAnchor.constraint(equalToConstant: 33),
-
+                shareProfileButton.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 30),
+                shareProfileButton.leadingAnchor.constraint(equalTo: backgroundViewContainer.leadingAnchor, constant: 30),
+                shareProfileButton.widthAnchor.constraint(equalToConstant: 225),
+                shareProfileButton.heightAnchor.constraint(equalToConstant: 50)
             ])
     }
 }

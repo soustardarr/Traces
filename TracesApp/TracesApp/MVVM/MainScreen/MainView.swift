@@ -28,6 +28,23 @@ class MainView: UIView {
         return mapView
     }()
 
+    var locationLabel: UILabel = {
+        let locationLabel = UILabel()
+        locationLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        locationLabel.textColor = .black
+        locationLabel.numberOfLines = 0
+        locationLabel.translatesAutoresizingMaskIntoConstraints = false
+        return locationLabel
+    }()
+
+    var weatherLabel: UILabel = {
+        let weatherLabel = UILabel()
+        weatherLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        weatherLabel.textColor = .black
+        weatherLabel.translatesAutoresizingMaskIntoConstraints = false
+        return weatherLabel
+    }()
+
     var buttonProfile: UIImageView = {
         let switchToProfile = UIImageView()
         let colorConfig = UIImage.SymbolConfiguration(paletteColors: [.black, .white])
@@ -169,6 +186,8 @@ class MainView: UIView {
 
     private func setUpLayout() {
         addSubview(mapView)
+        addSubview(locationLabel)
+        addSubview(weatherLabel)
         addSubview(grayViewBottom)
         addSubview(grayViewTop)
         addSubview(buttonProfile)
@@ -182,6 +201,12 @@ class MainView: UIView {
             mapView.leadingAnchor.constraint(equalTo: leadingAnchor),
             mapView.trailingAnchor.constraint(equalTo: trailingAnchor),
             mapView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            locationLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            locationLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+
+            weatherLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            weatherLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 10),
 
             buttonProfile.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             buttonProfile.topAnchor.constraint(equalTo: topAnchor, constant: 100),

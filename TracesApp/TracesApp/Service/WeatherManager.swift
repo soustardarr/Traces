@@ -11,19 +11,25 @@ import Alamofire
 
 class WeatherManager {
 
+    static let shared = WeatherManager()
 
-    @Published var weather: WeatherData?
+    func obtainWeather(latitude: Double, longitude: Double) async throws -> WeatherData? {
 
-    func obtainWeatherAlamofire(latitude: Double, longitude: Double) {
         let urlString = "https://api.open-meteo.com/v1/forecast?latitude=\(latitude)&longitude=\(longitude)&current_weather=true"
-        AF.request(urlString).responseDecodable(of: WeatherData.self) { response in
-            switch response.result {
-            case .success(let weatherData):
-                self.weather = weatherData
-            case .failure(let error):
-                print("Ошибка получения погоды: \(error)")
+
+        return try await withCheckedThrowingContinuation { continuation in
+
+            AF.request(urlString).responseDecodable(of: WeatherData.self) { response in
+                switch response.result {
+                case .success(let weatherData):
+                    continuation.resume(returning: weatherData)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
             }
+
         }
     }
+
 
 }

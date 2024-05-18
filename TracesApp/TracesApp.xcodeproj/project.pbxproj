@@ -11,7 +11,6 @@
 		7C2D6F6B2BE51DA800C2BEC3 /* UserAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F6A2BE51DA800C2BEC3 /* UserAnnotation.swift */; };
 		7C2D6F6D2BEA3CE100C2BEC3 /* ChatSUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F6C2BEA3CE100C2BEC3 /* ChatSUIView.swift */; };
 		7C2D6F702BEA660E00C2BEC3 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F6F2BEA660E00C2BEC3 /* ChatViewModel.swift */; };
-		7C2D6F782BEAAEFE00C2BEC3 /* phrases.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7C2D6F772BEAAEFE00C2BEC3 /* phrases.txt */; };
 		7C2D6F7E2BEB90B000C2BEC3 /* LogChatSUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F7D2BEB90B000C2BEC3 /* LogChatSUIView.swift */; };
 		7C2D6F832BF35E2B00C2BEC3 /* LogChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F822BF35E2A00C2BEC3 /* LogChatViewModel.swift */; };
 		7C2D6F882BF397EE00C2BEC3 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F872BF397EE00C2BEC3 /* FirestoreManager.swift */; };
@@ -93,12 +92,24 @@
 		7C66E1482BE3E1F30049E75C /* FriendsLocationAndChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66E1472BE3E1F30049E75C /* FriendsLocationAndChatManager.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		7C2D6FA32BF8EEFD00C2BEC3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		7C2D6F662BE502EB00C2BEC3 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		7C2D6F6A2BE51DA800C2BEC3 /* UserAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAnnotation.swift; sourceTree = "<group>"; };
 		7C2D6F6C2BEA3CE100C2BEC3 /* ChatSUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSUIView.swift; sourceTree = "<group>"; };
 		7C2D6F6F2BEA660E00C2BEC3 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
-		7C2D6F772BEAAEFE00C2BEC3 /* phrases.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = phrases.txt; sourceTree = "<group>"; };
 		7C2D6F7D2BEB90B000C2BEC3 /* LogChatSUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogChatSUIView.swift; sourceTree = "<group>"; };
 		7C2D6F822BF35E2A00C2BEC3 /* LogChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogChatViewModel.swift; sourceTree = "<group>"; };
 		7C2D6F872BF397EE00C2BEC3 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
@@ -228,11 +239,19 @@
 			path = FirestoreDatabase;
 			sourceTree = "<group>";
 		};
+		7C2D6FA42BF8EF3600C2BEC3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		7C66E08F2BE1093F0049E75C = {
 			isa = PBXGroup;
 			children = (
 				7C66E09A2BE1093F0049E75C /* TracesApp */,
 				7C66E0992BE1093F0049E75C /* Products */,
+				7C2D6FA42BF8EF3600C2BEC3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -258,7 +277,6 @@
 		7C66E0B22BE2460C0049E75C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				7C2D6F772BEAAEFE00C2BEC3 /* phrases.txt */,
 				7C66E0A72BE109400049E75C /* Assets.xcassets */,
 				7C66E0A92BE109400049E75C /* LaunchScreen.storyboard */,
 				7C66E0AC2BE109400049E75C /* Info.plist */,
@@ -425,6 +443,7 @@
 				7C66E0942BE1093F0049E75C /* Sources */,
 				7C66E0952BE1093F0049E75C /* Frameworks */,
 				7C66E0962BE1093F0049E75C /* Resources */,
+				7C2D6FA32BF8EEFD00C2BEC3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -513,7 +532,6 @@
 				7C66E0A82BE109400049E75C /* Assets.xcassets in Resources */,
 				7C66E0AB2BE109400049E75C /* Base in Resources */,
 				7C66E0B82BE2487A0049E75C /* GoogleService-Info.plist in Resources */,
-				7C2D6F782BEAAEFE00C2BEC3 /* phrases.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

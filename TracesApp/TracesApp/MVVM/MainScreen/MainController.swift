@@ -153,29 +153,82 @@ extension MainController: MainViewModelDelegate {
 
 extension MainController: MKMapViewDelegate {
 
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        let centerCoordinate = mapView.centerCoordinate
+    func getDistance() -> [String: CLLocationDistance] {
+        let visibleRegion = mainView?.mapView.visibleMapRect
+        // Получаем координаты углов видимой области карты
+        let topLeftCoordinate = MKMapPoint(x: visibleRegion?.minX ?? 0, y: visibleRegion?.minY ?? 0).coordinate
+        let bottomRightCoordinate = MKMapPoint(x: visibleRegion?.maxX ?? 0, y: visibleRegion?.maxY ?? 0).coordinate
+        // Вычисляем расстояние между углами видимой области карты (по вертикали и горизонтали)
+        let horizontalDistance = CLLocation(latitude: topLeftCoordinate.latitude, longitude: topLeftCoordinate.longitude)
+            .distance(from: CLLocation(latitude: topLeftCoordinate.latitude, longitude: bottomRightCoordinate.longitude))
+        let verticalDistance = CLLocation(latitude: topLeftCoordinate.latitude, longitude: topLeftCoordinate.longitude)
+            .distance(from: CLLocation(latitude: bottomRightCoordinate.latitude, longitude: bottomRightCoordinate.longitude))
 
+        let dict = [
+            "horizontalDistance": horizontalDistance,
+            "verticalDistance": verticalDistance
+        ]
+        return dict
+    }
+
+    func setWeather(latitude: Double, longitude: Double) {
+        Task {
+            do {
+                let weather = try await WeatherManager.shared.obtainWeather(latitude: latitude, longitude: longitude)
+                self.mainView?.weatherLabel.text = "\(weather?.currentWeather.temperature.description ?? "")℃" + " ветер: \(weather?.currentWeather.windspeed.description ?? "0") м/с"
+            } catch(let error) {
+                print("не удалось получить погоду: \(error)")
+            }
+        }
+    }
+
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        let horizontalDistanceCity: Double = 17746
+        let verticalDistanceCity: Double = 37545
+        let horizontalDistanceCounty: Double = 1336802
+        let verticalDistanceCounty: Double = 4875803
+        let dict = self.getDistance()
+        let hDistance = dict["horizontalDistance"]
+        let vDistance = dict["verticalDistance"]
+
+        let centerCoordinate = mapView.centerCoordinate
         let location = CLLocation(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
 
         let geocoder = CLGeocoder()
         geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
             if let error = error {
-                print("Reverse geocoding failed with error: \(error.localizedDescription)")
+                print("\(error.localizedDescription)")
                 return
             }
-
-            if let placemark = placemarks?.first {
-                if let city = placemark.locality {
-                    print("Центр экрана находится в городе: \(city)")
-                } else if let area = placemark.administrativeArea {
-                    print("Центр экрана находится в области: \(area)")
-                } else if let area1 = placemark.country {
-                    print("Не удалось определить город или область.")
-                }
-            } else {
+            guard let placemark = placemarks?.first else {
                 print("Не удалось получить информацию о местоположении.")
+                return
             }
+            if hDistance ?? 0 < horizontalDistanceCity,
+               vDistance ?? 0 < verticalDistanceCity {
+                guard let place = placemark.locality else { return }
+                if place != self.mainView?.locationLabel.text {
+                    self.mainView?.locationLabel.text = place
+                    self.setWeather(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
+                }
+//                self.setWeather(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
+            } else if hDistance ?? 0 > horizontalDistanceCity,
+                      vDistance ?? 0 > verticalDistanceCity,
+                      hDistance ?? 0 < horizontalDistanceCounty,
+                      vDistance ?? 0 < verticalDistanceCounty {
+                guard let place = placemark.administrativeArea else { return }
+                if place != self.mainView?.locationLabel.text {
+                    self.mainView?.locationLabel.text = place
+                    self.setWeather(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
+                }
+//                self.setWeather(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
+            } else if hDistance ?? 0 > horizontalDistanceCounty,
+                      vDistance ?? 0 > verticalDistanceCounty,
+                      let county = placemark.country {
+                self.mainView?.locationLabel.text = county
+                self.mainView?.weatherLabel.text = ""
+            }
+
         }
     }
 

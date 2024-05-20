@@ -3,7 +3,7 @@
 //  TracesApp
 //
 //  Created by Ruslan Kozlov on 30.04.2024.
-// traces://openProfile?safeEmail=irina@mail,ru
+// 
 
 import UIKit
 
@@ -81,7 +81,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) { }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        //        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        CoreDataManager.shared.saveContext()
     }
 }
 

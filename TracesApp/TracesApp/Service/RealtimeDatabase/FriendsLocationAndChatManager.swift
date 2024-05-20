@@ -21,6 +21,10 @@ class FriendsLocationAndChatManager {
 
     let serialQueue = DispatchQueue(label: "Firebase.LocationManager.SerialQueue")
 
+    private init() {
+        self.obtainEmails()
+    }
+
     var friendsEmail: [String]? {
         didSet{
             serialQueue.async {
@@ -44,9 +48,6 @@ class FriendsLocationAndChatManager {
 
     var locationUpdateForActiveUser: ((User) -> ())?
 
-    private init() {
-        self.obtainEmails()
-    }
 
 
     func obtainEmails() {

@@ -32,6 +32,14 @@ struct ChatSUIView: View {
             }
             .navigationBarHidden(true)
         }
+        .onAppear(perform: {
+            print("юзеры с кордаты")
+            viewModel.friends =  CoreDataManager.shared.obtainUsersWithLastMessages() ?? []
+        })
+
+        .onDisappear(perform: {
+            CoreDataManager.shared.saveUsersWithLastMessages(users: viewModel.friends)
+        })
     }
 
     var messagesView: some View {
@@ -63,14 +71,14 @@ struct ChatSUIView: View {
                                     Spacer()
                                 }
                                 Spacer()
-                                VStack() {
-                                    if let readIt = user.lastMessage?.readIt {
-                                        if readIt {
-                                            Circle().frame(height: 10)
-                                                .foregroundStyle(.blue)
-                                        }
-                                    }
-                                }
+//                                VStack() {
+//                                    if let readIt = user.lastMessage?.readIt {
+//                                        if readIt {
+//                                            Circle().frame(height: 10)
+//                                                .foregroundStyle(.blue)
+//                                        }
+//                                    }
+//                                }
 
                             }
                         }

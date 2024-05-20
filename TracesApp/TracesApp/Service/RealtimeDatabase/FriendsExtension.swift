@@ -60,7 +60,6 @@ extension RealTimeDataBaseManager {
     func deleteFollow(for currentUser: User, completion: @escaping (User?) -> Void) {
         let email = UserDefaults.standard.string(forKey: "email") ?? ""
         let selfSafeEmail = RealTimeDataBaseManager.safeEmail(emailAddress: email)
-        //        let selfUser = CoreDataManager.shared.obtainSavedProfileInfo()
         // удаляем подписку selfuser
         database.child(selfSafeEmail)
             .child("subscriptions")
@@ -150,10 +149,9 @@ extension RealTimeDataBaseManager {
     //MARK: - получение друзей
 
     func getEmailFriends(completion: @escaping (Result<[String], Error>) -> Void) {
-        guard let email = UserDefaults.standard.string(forKey: "email") else {
+        guard let safeEmail = UserDefaults.standard.string(forKey: "safeEmail") else {
             return
         }
-        let safeEmail = RealTimeDataBaseManager.safeEmail(emailAddress: email)
         database.child(safeEmail).child("friends").observeSingleEvent(of: .value) { snapshot in
                 if let friends = snapshot.value as? [String] {
                     completion(.success(friends))
@@ -165,10 +163,9 @@ extension RealTimeDataBaseManager {
 
 
     func setLocation(latitude: Double, longitude: Double) {
-        guard let email = UserDefaults.standard.string(forKey: "email") else {
+        guard let safeEmail = UserDefaults.standard.string(forKey: "safeEmail") else {
             return
         }
-        let safeEmail = RealTimeDataBaseManager.safeEmail(emailAddress: email)
         database.child(safeEmail)
             .child("location")
             .setValue(["latitude": latitude, "longitude": longitude])

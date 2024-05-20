@@ -24,5 +24,4 @@ struct User: Identifiable {
     var subscriptions: [String]?
     var location: [String: Double]?
     var lastMessage: LastMessage?
-
 }

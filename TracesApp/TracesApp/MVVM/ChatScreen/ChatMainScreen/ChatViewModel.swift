@@ -12,11 +12,9 @@ class ChatViewModel: ObservableObject {
 
 
     @Published var friends: [User] = []
-    @Published var lastMessages = [LastMessage]()
-    @Published var readIt: Bool?
+//    @Published var readIt: Bool?
 
     private var cancellable: Set<AnyCancellable> = []
-    var arrayPhrases: [String] = []
 
     init() {
         FriendsLocationAndChatManager.shared.$generalFriends.receive(on: DispatchQueue.main).sink { [weak self] users in
@@ -50,7 +48,6 @@ class ChatViewModel: ObservableObject {
                         self.friends.insert(friend, at: 0)
                     } else if let index = self.friends.firstIndex(where: { $0.safeEmail == lastMessage.fromUserEmail }) {
                         self.friends[index].lastMessage = lastMessage
-                        print(lastMessage)
                         let friend = self.friends.remove(at: index)
                         self.friends.insert(friend, at: 0)
                     }

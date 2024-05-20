@@ -118,6 +118,7 @@ class LogChatViewModel: ObservableObject {
 
         let dataForInterlocutor = [FirebaseConstants.timestamp: Timestamp(), FirebaseConstants.text: self.textField, FirebaseConstants.fromUserEmail: fromEmail, FirebaseConstants.toUserEmail: toEmail, FirebaseConstants.readIt: 0 ] as [String: Any]
 
+       // ????
         documentForInterlocutor.setData(data) { error in
             if let error = error {
                 self.errorMessage = "не удалось сохранить last_messaage: \(error)"

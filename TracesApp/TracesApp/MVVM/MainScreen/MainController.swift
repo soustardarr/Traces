@@ -82,7 +82,7 @@ class MainController: UIViewController {
     private var friendAnnotations = [String: UserAnnotation]()
 
     private func obtainAndShowFriends() {
-        FriendsLocationAndChatManager.shared.locationUpdateForActiveUser = { friend in
+        ObtainFriendManager.shared.locationUpdateForActiveUser = { friend in
             if let location = friend.location,
                let latitude = location["latitude"],
                let longitude = location["longitude"] {

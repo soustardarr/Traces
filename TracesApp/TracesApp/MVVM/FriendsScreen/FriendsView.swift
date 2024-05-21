@@ -26,15 +26,15 @@ class FriendsView: UIView {
 
     var friendsLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
-        label.font = .systemFont(ofSize: 30)
-        label.text = "друзья"
+        label.textColor = .black
+        label.font = UIFont.boldSystemFont(ofSize: 30)
+        label.text = "ваши друзья:"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
 
-    var friendsTableView: UITableView = {
+    var peopleTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .white
@@ -42,6 +42,15 @@ class FriendsView: UIView {
         tableView.isHidden = true
         return tableView
     }()
+
+    var friendsTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .white
+        tableView.separatorStyle = .singleLine
+        return tableView
+    }()
+
 
     var noFriendsLabel: UILabel = {
         let label = UILabel()
@@ -66,25 +75,29 @@ class FriendsView: UIView {
     private func setupUI() {
         backgroundColor = .white
         addSubview(friendsLabel)
+        addSubview(peopleTableView)
         addSubview(friendsTableView)
         addSubview(noFriendsLabel)
         NSLayoutConstraint.activate([
 
-            friendsLabel.topAnchor.constraint(equalTo: bottomAnchor, constant: 25),
-            friendsLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+            friendsLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            friendsLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
 
             noFriendsLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             noFriendsLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
 
-            friendsTableView.topAnchor.constraint(equalTo: topAnchor),
+            peopleTableView.topAnchor.constraint(equalTo: topAnchor),
+            peopleTableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            peopleTableView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            peopleTableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+
+            friendsTableView.topAnchor.constraint(equalTo: friendsLabel.bottomAnchor, constant: 3),
             friendsTableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             friendsTableView.trailingAnchor.constraint(equalTo: trailingAnchor),
             friendsTableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
     }
-
-
-
 
 }

@@ -12,7 +12,7 @@ class ProfileController: UIViewController {
     private var headerView: HeaderView?
     private var profileView: ProfileView?
     private var profileViewModel: ProfileViewModel?
-    private var profileArray = ["друзья", "подписчики", "истории", "выйти из аккаунта"]
+    private var profileArray = ["друзья", "подписчики", "выйти из аккаунта"]
     private var profile: User?
     var profileUrl: String?
 
@@ -94,8 +94,6 @@ extension ProfileController: UITableViewDelegate {
         case 1:
             print("Действие для ячейки 'подписчики'")
         case 2:
-            print("Действие для ячейки 'истории'")
-        case 3:
             didTappedSignOutButton()
         default:
             break

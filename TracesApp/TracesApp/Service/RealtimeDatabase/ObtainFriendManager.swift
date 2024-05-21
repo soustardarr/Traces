@@ -13,9 +13,9 @@ enum LocationManagerError: Error {
     case failedReceivingFriendsEmails
 }
 
-class FriendsLocationAndChatManager {
+class ObtainFriendManager {
 
-    static let shared = FriendsLocationAndChatManager()
+    static let shared = ObtainFriendManager()
 
     let database = Database.database().reference()
 

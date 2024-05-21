@@ -8,6 +8,10 @@
 import UIKit
 import Combine
 
+protocol PeopleProfileControllerDelegate: AnyObject {
+    func updateUser(user: User)
+}
+
 class PeopleProfileController: UIViewController {
 
     private var peopleProfileView: PeopleProfileView?
@@ -15,6 +19,8 @@ class PeopleProfileController: UIViewController {
     private var avatarimage: UIImage
     private var currentUser: User
     private var cancellable: Set<AnyCancellable> = []
+
+    weak var delegate: PeopleProfileControllerDelegate?
 
 
     init(avatarimage: UIImage, currentUser: User) {
@@ -36,12 +42,16 @@ class PeopleProfileController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         setupDataBindings()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        delegate?.updateUser(user: currentUser)
     }
 
     private func setup() {
@@ -53,6 +63,7 @@ class PeopleProfileController: UIViewController {
             .sink(receiveValue: { [ weak self ] user in
                 guard let strongSelf = self else { return }
                 let result = self?.peopleProfileViewModel?.checkFriendStatus(with: user)
+                self?.currentUser = user
                 strongSelf.setupStatusFriendButton(result: result ?? .cleanStatus)
             })
             .store(in: &cancellable)
@@ -84,17 +95,12 @@ class PeopleProfileController: UIViewController {
         }
     }
 
-
-
 }
-
 
 extension PeopleProfileController: PeopleProfileViewDelegate {
     func didTappedFriendButton() {
-
         peopleProfileViewModel?.changeFriendStatus()
         setupDataBindings()
         setupStatusFriendButton()
-
     }
 }

@@ -51,6 +51,20 @@ class FriendsViewModel {
     }
 
 
+    func getImage(pictureFileName: String, completion: @escaping (Data) -> Void) {
+        StorageManager.shared.downloadImage(pictureFileName) { result in
+            switch result {
+            case.success(let imageData):
+                completion(imageData)
+            case .failure(let error):
+                print("ошибка установки фото \(error)")
+                completion(Data())
+            }
+        }
+
+    }
+
+
 }
 
 

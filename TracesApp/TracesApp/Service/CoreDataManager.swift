@@ -117,8 +117,26 @@ class CoreDataManager {
             print("ошибка получения всех пользователей в chatView \(error)")
             return nil
         }
-        print(obtainedUsers)
         return obtainedUsers
     }
+
+    func deleteAllInfo() {
+        let persistentStoreCoordinator = persistentContainer.persistentStoreCoordinator
+
+        for entity in persistentStoreCoordinator.managedObjectModel.entities {
+            guard let entityName = entity.name else { continue }
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+            let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+            do {
+                try viewContext.execute(batchDeleteRequest)
+                try viewContext.save()
+            } catch {
+                print("Ошибка удаления всех данных из сущности \(entityName): \(error)")
+            }
+        }
+    }
+
+
 
 }

@@ -17,7 +17,7 @@ class ChatViewModel: ObservableObject {
     private var cancellable: Set<AnyCancellable> = []
 
     init() {
-        FriendsLocationAndChatManager.shared.$generalFriends.receive(on: DispatchQueue.main).sink { [weak self] users in
+        ObtainFriendManager.shared.$generalFriends.receive(on: DispatchQueue.main).sink { [weak self] users in
             if let users = users {
                 self?.friends = users
                 self?.fetchLastMessage()

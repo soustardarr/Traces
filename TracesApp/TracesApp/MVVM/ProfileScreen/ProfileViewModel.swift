@@ -13,6 +13,7 @@ class ProfileViewModel {
     func signOut() {
         UserDefaults.standard.removeObject(forKey: "email")
         UserDefaults.standard.removeObject(forKey: "safeEmail")
+        CoreDataManager.shared.deleteAllInfo()
         do {
             try FirebaseAuth.Auth.auth().signOut()
             AppCoordinator.shared.start()

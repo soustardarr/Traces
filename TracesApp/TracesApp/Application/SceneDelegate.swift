@@ -18,8 +18,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             AppCoordinator.shared.window = window
             AppCoordinator.shared.start()
         }
-    }
 
+        if let urlContext = connectionOptions.urlContexts.first, let components = URLComponents(url: urlContext.url, resolvingAgainstBaseURL: true) {
+            openScreen(with: components.queryItems ?? [], scene: scene)
+        }
+    }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let firstUrl = URLContexts.first, let components = URLComponents(url: firstUrl.url, resolvingAgainstBaseURL: true) {

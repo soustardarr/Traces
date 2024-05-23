@@ -23,9 +23,13 @@ class ObtainFriendManager {
 
     var locationObservers: [String: DatabaseHandle] = [:]
 
-    private init() {
-        self.obtainEmails()
-    }
+//    private init() {
+//        self.obtainEmails()
+//    }
+
+//    func map() {
+//        self.obtainEmails()
+//    }
 
     var friendsEmail: [String]? {
         didSet{

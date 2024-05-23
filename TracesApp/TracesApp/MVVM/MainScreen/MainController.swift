@@ -64,30 +64,22 @@ class MainController: UIViewController {
     
     private func obtainProfile() {
         let safeEmail = UserDefaults.standard.string(forKey: "safeEmail") ?? ""
-        DispatchQueue.global(qos: .default).async {
-            RealTimeDataBaseManager.shared.getProfileInfo(safeEmail: safeEmail) { result in
-                switch result {
-                case .success(let user):
-                    self.checkingExistenceFriends(user: user)
-                    doInMainThread {
-                        self.profile = user
-                        self.profileAnnotationView = AnnotationView(name: user.name, image: user.profilePicture ?? Data())
-                        // тут нужно обновить анотациб пользователя
-                    }
-                case .failure(let error):
-                    print("ошибка получения профиля для MainVC \(error)")
+        ObtainFriendManager.shared.obtainEmails()
+        RealTimeDataBaseManager.shared.getProfileInfo(safeEmail: safeEmail) { result in
+            switch result {
+            case .success(let user):
+                doInMainThread {
+                    self.profile = user
+                    self.profileAnnotationView = AnnotationView(name: user.name, image: user.profilePicture ?? Data())
+                    // тут нужно обновить анотациб пользователя
                 }
+            case .failure(let error):
+                print("ошибка получения профиля для MainVC \(error)")
             }
         }
+
     }
 
-    private func checkingExistenceFriends(user: User) {
-        DispatchQueue.global().asyncAfter(deadline: .now() + 15, execute: {
-            if user.friends?.isEmpty == false, ObtainFriendManager.shared.generalFriends?.isEmpty == true {
-                ObtainFriendManager.shared.obtainEmails()
-            }
-        })
-    }
 
     private func obtainFriend() {
         ObtainFriendManager.shared.$generalFriends

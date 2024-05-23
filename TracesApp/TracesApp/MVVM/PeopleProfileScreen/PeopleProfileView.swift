@@ -10,27 +10,12 @@ import UIKit
 
 protocol PeopleProfileViewDelegate: AnyObject {
     func didTappedFriendButton()
+    func didTappedMessageButton()
 }
 
 class PeopleProfileView: UIView {
 
     weak var delegate: PeopleProfileViewDelegate?
-
-    var imageMinus: UIImageView = {
-        var imageMinus = UIImageView(image: .minus)
-        imageMinus.translatesAutoresizingMaskIntoConstraints = false
-        return imageMinus
-    }()
-
-    var buttonSettings: UIImageView = {
-        let buttonSettings = UIImageView()
-        let colorConfig = UIImage.SymbolConfiguration(paletteColors: [.gray])
-        let settingsImage = UIImage(systemName: "gearshape.fill", withConfiguration: colorConfig)
-        buttonSettings.image = settingsImage
-        buttonSettings.isUserInteractionEnabled = true
-        buttonSettings.translatesAutoresizingMaskIntoConstraints = false
-        return buttonSettings
-    }()
 
     var avatarImageView: UIImageView = {
         let avatarImageView = UIImageView()
@@ -66,7 +51,7 @@ class PeopleProfileView: UIView {
 
     var buttonMessage: UIImageView = {
         let buttonMessage = UIImageView()
-        let colorConfig = UIImage.SymbolConfiguration(paletteColors: [.gray])
+        let colorConfig = UIImage.SymbolConfiguration(paletteColors: [.systemIndigo])
         let messageImage = UIImage(systemName: "message.badge.circle.fill", withConfiguration: colorConfig)
         buttonMessage.image = messageImage
         buttonMessage.isUserInteractionEnabled = true
@@ -74,37 +59,27 @@ class PeopleProfileView: UIView {
         return buttonMessage
     }()
 
-    var peopleNewsFeed: UILabel = {
-        var peopleNewsFeed = UILabel()
-        peopleNewsFeed.text = "публикации: "
-        peopleNewsFeed.font = UIFont.systemFont(ofSize: 22)
-        peopleNewsFeed.textColor = .gray
-        peopleNewsFeed.translatesAutoresizingMaskIntoConstraints = false
-        return peopleNewsFeed
+    var iconApp: UIImageView = {
+        let iconApp = UIImageView()
+        iconApp.image = UIImage.iconApp
+        iconApp.translatesAutoresizingMaskIntoConstraints = false
+        return iconApp
     }()
 
-    var friendsTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = .green
-        tableView.isHidden = true
-        tableView.separatorStyle = .none
-        return tableView
-    }()
+    private func addGesture() {
+        let gestureMessage = UITapGestureRecognizer(target: self, action: #selector(didTappedMessage))
+        buttonMessage.addGestureRecognizer(gestureMessage)
 
-    var label: UILabel = {
-        var label = UILabel()
-        label.text = "посты"
-        label.font = UIFont.systemFont(ofSize: 22)
-        label.textColor = .red
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    }
+
+    @objc private func didTappedMessage() {
+        delegate?.didTappedMessageButton()
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        addGesture()
     }
 
     required init?(coder: NSCoder) {
@@ -115,53 +90,34 @@ class PeopleProfileView: UIView {
     private func setupUI() {
 
         backgroundColor = .white
-
-        addSubview(imageMinus)
-        addSubview(buttonSettings)
         addSubview(nameLabel)
         addSubview(avatarImageView)
         addSubview(buttonMessage)
         addSubview(friendButton)
-        addSubview(peopleNewsFeed)
-        addSubview(friendsTableView)
-        addSubview(label)
+        addSubview(iconApp)
         NSLayoutConstraint.activate([
-            imageMinus.centerXAnchor.constraint(equalTo: centerXAnchor),
-            imageMinus.topAnchor.constraint(equalTo: topAnchor, constant: 10),
 
-            buttonSettings.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            buttonSettings.topAnchor.constraint(equalTo: imageMinus.bottomAnchor, constant: 10),
-            buttonSettings.widthAnchor.constraint(equalToConstant: 35),
-            buttonSettings.heightAnchor.constraint(equalToConstant: 35),
-
-            nameLabel.topAnchor.constraint(equalTo: buttonSettings.bottomAnchor, constant: 20),
-            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-
-            avatarImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            avatarImageView.topAnchor.constraint(equalTo: buttonSettings.topAnchor),
-            avatarImageView.widthAnchor.constraint(equalToConstant: 150),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 150),
-
-            buttonMessage.leadingAnchor.constraint(equalTo: buttonSettings.trailingAnchor, constant: 20),
-            buttonMessage.topAnchor.constraint(equalTo: imageMinus.bottomAnchor, constant: 10),
+            buttonMessage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            buttonMessage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 30),
             buttonMessage.widthAnchor.constraint(equalToConstant: 36),
             buttonMessage.heightAnchor.constraint(equalToConstant: 36),
 
+
+            avatarImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            avatarImageView.topAnchor.constraint(equalTo: buttonMessage.bottomAnchor, constant: 30),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 150),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 150),
+
+            nameLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 10),
+            nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+
+            friendButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             friendButton.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20),
-            friendButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             friendButton.heightAnchor.constraint(equalToConstant: 35),
-            friendButton.widthAnchor.constraint(equalToConstant: 120),
+            friendButton.widthAnchor.constraint(equalToConstant: 200),
 
-            peopleNewsFeed.topAnchor.constraint(equalTo: friendButton.bottomAnchor, constant: 30),
-            peopleNewsFeed.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-
-            friendsTableView.topAnchor.constraint(equalTo: peopleNewsFeed.bottomAnchor, constant: 10),
-            friendsTableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            friendsTableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            friendsTableView.bottomAnchor.constraint(equalTo: bottomAnchor),
-
-            label.centerXAnchor.constraint(equalTo: centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
+            iconApp.centerXAnchor.constraint(equalTo: centerXAnchor),
+            iconApp.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30)
 
         ])
 

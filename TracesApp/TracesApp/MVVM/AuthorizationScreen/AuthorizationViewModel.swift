@@ -32,6 +32,12 @@ class AuthorizationViewModel {
             completion(true)
         }
 
+//        DispatchQueue.global().asyncAfter(deadline: .now() + 20, execute: {
+//            if ObtainFriendManager.shared.generalFriends?.isEmpty == true {
+//                ObtainFriendManager.shared.obtainEmails()
+//            }
+//        })
+
     }
 
 }

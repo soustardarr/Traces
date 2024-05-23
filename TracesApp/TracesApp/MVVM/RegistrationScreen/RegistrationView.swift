@@ -17,8 +17,18 @@ class RegistrationView: UIView {
 
     weak var delegate: RegistrationViewDelegate?
 
+    var addPhotoLabel: UILabel = {
+        let label = UILabel()
+        label.text = "установить фото:"
+        label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     var avatarImageView: UIImageView = {
-        let avatarImageView = UIImageView(image: .profileIcon)
+        let avatarImageView = UIImageView()
+        avatarImageView.image = UIImage(systemName: "person.circle.fill")
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
         avatarImageView.layer.masksToBounds = true
         avatarImageView.layer.cornerRadius = 100
@@ -98,7 +108,7 @@ class RegistrationView: UIView {
         button.setTitle("готово", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 20
+        button.layer.cornerRadius = 8
         button.clipsToBounds = true
         let action = UIAction { _ in self.delegate?.doneSignUpButtonTapped() }
         button.addAction(action, for: .touchUpInside)
@@ -133,7 +143,7 @@ class RegistrationView: UIView {
 
     private func setupUI() {
 
-        backgroundColor = .lightGray
+        backgroundColor = .systemIndigo
         addSubview(avatarImageView)
         fieldStackView.addArrangedSubview(nameTextField)
         fieldStackView.addArrangedSubview(loginTextField)
@@ -141,12 +151,16 @@ class RegistrationView: UIView {
         fieldStackView.addArrangedSubview(secondPasswordTextField)
         addSubview(fieldStackView)
         addSubview(doneSignUpButton)
+        addSubview(addPhotoLabel)
 
 
         NSLayoutConstraint.activate([
+            
+            addPhotoLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10),
+            addPhotoLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
 
             avatarImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            avatarImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 50),
+            avatarImageView.topAnchor.constraint(equalTo: addPhotoLabel.bottomAnchor, constant: 10),
             avatarImageView.widthAnchor.constraint(equalToConstant: 200),
             avatarImageView.heightAnchor.constraint(equalToConstant: 200),
 

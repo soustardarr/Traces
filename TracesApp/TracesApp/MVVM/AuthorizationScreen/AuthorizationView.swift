@@ -84,7 +84,7 @@ class AuthorizationView: UIView {
         button.setTitle("регистрация", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 20
+        button.layer.cornerRadius = 8
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         let action = UIAction { _ in self.delegate?.didTapRegister() }
@@ -112,7 +112,7 @@ class AuthorizationView: UIView {
 
 
     private func setupUI() {
-        backgroundColor = .lightGray
+        backgroundColor = .systemIndigo
         fieldStackView.addArrangedSubview(loginTextField)
         fieldStackView.addArrangedSubview(passwordTextField)
         fieldStackView.addArrangedSubview(logInButton)

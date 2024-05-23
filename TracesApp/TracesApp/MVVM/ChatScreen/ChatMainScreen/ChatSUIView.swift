@@ -11,7 +11,6 @@ struct ChatSUIView: View {
 
     @ObservedObject private var viewModel = ChatViewModel()
     @State var isPresentedChat = false
-    @State var user: User?
 
     var customNavBar: some View {
         HStack {
@@ -33,18 +32,21 @@ struct ChatSUIView: View {
             .navigationBarHidden(true)
         }
         .onAppear(perform: {
-            print("юзеры с кордаты")
-            viewModel.friends =  CoreDataManager.shared.obtainUsersWithLastMessages() ?? []
+            if let users = CoreDataManager.shared.obtainUsersWithLastMessages(), !users.isEmpty {
+                viewModel.friends = users
+                
+                print("\(users) УСТАНОВЛЕНЫ")
+            }
+            print("ПУСТАЯ КОРДАТА")
         })
-
         .onDisappear(perform: {
-            CoreDataManager.shared.saveUsersWithLastMessages(users: viewModel.friends)
+            CoreDataManager.shared.saveUsersWithLastMessages(users: viewModel.friends ?? [])
         })
     }
 
     var messagesView: some View {
         ScrollView {
-            ForEach(viewModel.friends) { user in
+            ForEach(viewModel.friends ?? []) { user in
                 VStack {
                     NavigationLink {
                         LogChatSUIView(user: user)
@@ -60,9 +62,6 @@ struct ChatSUIView: View {
                                         Text(user.name)
                                             .font(.system(size: 16, weight: .bold))
                                             .foregroundStyle(.black)
-//                                        Circle()
-//                                            .frame(height: 8)
-//                                            .foregroundStyle(.green)
                                     }
                                     Text(user.lastMessage?.text ?? "Начните общение!")
                                         .font(.system(size: 12, weight: .light))
@@ -71,15 +70,6 @@ struct ChatSUIView: View {
                                     Spacer()
                                 }
                                 Spacer()
-//                                VStack() {
-//                                    if let readIt = user.lastMessage?.readIt {
-//                                        if readIt {
-//                                            Circle().frame(height: 10)
-//                                                .foregroundStyle(.blue)
-//                                        }
-//                                    }
-//                                }
-
                             }
                         }
                     }

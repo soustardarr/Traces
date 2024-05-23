@@ -14,7 +14,7 @@ class FriendsController: UIViewController {
     private var friendsView: FriendsView?
     private var friendsViewModel: FriendsViewModel?
 
-    var results: [User]!
+    var results: [User] = []
     var friends: [User] = []
     var cancellable: Set<AnyCancellable> = []
 
@@ -41,7 +41,7 @@ class FriendsController: UIViewController {
     private func setupDataPeople() {
         friendsViewModel?.$results
             .sink(receiveValue: { [ weak self ] users in
-                self?.results = users
+                self?.results = users ?? []
                 self?.friendsView?.peopleTableView.reloadData()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: DispatchWorkItem(block: {
                     self?.friendsView?.hud.dismiss()
@@ -188,12 +188,15 @@ extension FriendsController: UITableViewDelegate {
             if let cell = tableView.cellForRow(at: indexPath) as? FriendsViewCell {
                 guard let avatarImage = cell.avatarImageView.image else { return }
                 let vc = PeopleProfileController(avatarimage: avatarImage, currentUser: friends[indexPath.row])
+                vc.delegate = self
                 self.present(vc, animated: true)
             }
         } else if tableView == friendsView?.peopleTableView {
             if let cell = tableView.cellForRow(at: indexPath) as? PeopleViewCell {
                 guard let avatarImage = cell.avatarImageView.image else { return }
-                let vc = PeopleProfileController(avatarimage: avatarImage, currentUser: results[indexPath.row])
+                var currentUser = results[indexPath.row]
+                currentUser.profilePicture = avatarImage.pngData()
+                let vc = PeopleProfileController(avatarimage: avatarImage, currentUser: currentUser)
                 vc.delegate = self
                 self.present(vc, animated: true)
             }
@@ -204,15 +207,53 @@ extension FriendsController: UITableViewDelegate {
 
 
 extension FriendsController: PeopleProfileControllerDelegate {
-    func updateUser(user: User) {
+
+    func updateArray(user: User, status: FriendStatus) {
+
+        reloadPeopleArray(user: user)
+        let selfSafeEmail = UserDefaults.standard.string(forKey: "safeEmail") ?? ""
+
+        switch status {
+        case .selfSubscribed:
+            if friends.contains(where: { $0.safeEmail == user.safeEmail}) {
+                friends.removeAll(where: { $0.safeEmail == user.safeEmail})
+                ObtainFriendManager.shared.generalFriends?.removeAll(where: { $0.safeEmail == user.safeEmail})
+//                ObtainFriendManager.shared.removeLocationObserver(user: user)
+                self.friendsView?.friendsTableView.reloadData()
+            }
+        case .heSubscribedForSelf:
+            if friends.contains(where: { $0.safeEmail == user.safeEmail}) {
+                friends.removeAll(where: { $0.safeEmail == user.safeEmail})
+                ObtainFriendManager.shared.generalFriends?.removeAll(where: { $0.safeEmail == user.safeEmail})
+//                ObtainFriendManager.shared.removeLocationObserver(user: user)
+                self.friendsView?.friendsTableView.reloadData()
+            }
+        case .inFriends:
+            if !friends.contains(where: { $0.safeEmail == user.safeEmail}) {
+                friends.append(user)
+                ObtainFriendManager.shared.generalFriends?.append(user)
+//                ObtainFriendManager.shared.addLocationObserver(user: user)
+                self.friendsView?.friendsTableView.reloadData()
+            }
+        case .cleanStatus:
+            print("ничего не делаем")
+        }
+
+    }
+
+    func reloadPeopleArray(user: User) {
+
+        let indexRes = friendsViewModel?.results?.firstIndex(where: { $0.safeEmail == user.safeEmail }) ?? 0
         friendsViewModel?.results?.removeAll(where: { $0.safeEmail == user.safeEmail })
-        friendsViewModel?.results?.append(user)
+        friendsViewModel?.results?.insert(user, at: indexRes)
 
+        let indexUsers = friendsViewModel?.users.firstIndex(where: { $0.safeEmail == user.safeEmail }) ?? 0
         friendsViewModel?.users.removeAll(where: { $0.safeEmail == user.safeEmail })
-        friendsViewModel?.users.append(user)
+        friendsViewModel?.users.insert(user, at: indexUsers)
 
-        results?.removeAll(where: { $0.safeEmail == user.safeEmail })
-        results?.append(user)
+        let index = results.firstIndex(where: { $0.safeEmail == user.safeEmail }) ?? 0
+        results.removeAll(where: { $0.safeEmail == user.safeEmail })
+        results.insert(user, at: index)
     }
 }
 

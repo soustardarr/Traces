@@ -141,6 +141,7 @@ class MainView: UIView {
         userForMap.layer.cornerRadius = 20
         return userForMap
     }()
+    
 
     private func addGesture() {
         let gestureProfile = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))

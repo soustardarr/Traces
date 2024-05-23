@@ -28,11 +28,24 @@ extension RealTimeDataBaseManager {
                         completionHandler(.success(user))
                     }
                 }
+            } else if let userDict = snapshot.value as? [String: Any],
+                      let userName = userDict["name"] as? String,
+                      let userEmail = userDict["email"] as? String {
+
+                StorageManager.shared.downloadAvatarDataSelfProfile(safeEmail) { data in
+                    if data != nil {
+                        let user = User(name: userName, email: userEmail, profilePicture: data)
+                        completionHandler(.success(user))
+                    } else {
+                        print("получен профиль без фото")
+                        let user = User(name: userName, email: userEmail)
+                        completionHandler(.success(user))
+                    }
+                }
             } else {
                 completionHandler(.failure(RealTimeDataBaseError.failedProfile))
                 print("Неизвестный формат снимка данных")
             }
-
         }
     }
 

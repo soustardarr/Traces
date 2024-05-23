@@ -15,11 +15,10 @@ extension RealTimeDataBaseManager {
 
     //MARK: ДОБАВЛЕНИЕ ПОДПИСКИ
     func addFollow(for currentUser: User, completion: @escaping (User?) -> Void) {
-        //        let selfUser = CoreDataManager.shared.obtainSavedProfileInfo()
-        let email = UserDefaults.standard.string(forKey: "email") ?? ""
-        let selfSafeEmail = RealTimeDataBaseManager.safeEmail(emailAddress: email)
+        let selfSafeEmail = UserDefaults.standard.string(forKey: "safeEmail") ?? ""
         var currentUser = User(name: currentUser.name,
                                email: currentUser.email,
+                               profilePicture: currentUser.profilePicture,
                                friends: currentUser.friends,
                                followers: currentUser.followers,
                                subscriptions: currentUser.subscriptions)
@@ -31,10 +30,16 @@ extension RealTimeDataBaseManager {
                 if var followers = snapshot.value as? [String] {
                     followers.append(selfSafeEmail)
                     currentUser.followers = followers
+                    if ((currentUser.subscriptions?.contains(where: { $0 == selfSafeEmail })) != nil) {
+                        currentUser.friends?.append(selfSafeEmail)
+                    }
                     strongSelf.database.child(currentUser.safeEmail).child("followers").setValue(followers)
                     completion(currentUser)
                 } else {
                     let followers: [String] = [selfSafeEmail]
+                    if ((currentUser.subscriptions?.contains(where: { $0 == selfSafeEmail })) != nil) {
+                        currentUser.friends?.append(selfSafeEmail)
+                    }
                     currentUser.followers?.append(selfSafeEmail)
                     strongSelf.database.child("\(currentUser.safeEmail)/followers").setValue(followers)
                     currentUser.followers = followers
@@ -76,6 +81,7 @@ extension RealTimeDataBaseManager {
         // удаляем подписчика current user
         var currentUser = User(name: currentUser.name,
                                email: currentUser.email,
+                               profilePicture: currentUser.profilePicture,
                                friends: currentUser.friends,
                                followers: currentUser.followers,
                                subscriptions: currentUser.subscriptions)
@@ -85,6 +91,7 @@ extension RealTimeDataBaseManager {
                 guard let strongSelf = self else { return }
                 if var followers = snapshot.value as? [String] {
                     followers.removeAll(where: { $0 == selfSafeEmail})
+                    currentUser.friends?.removeAll(where: { $0 == selfSafeEmail})
                     currentUser.followers = followers
                     strongSelf.database.child(currentUser.safeEmail).child("followers").setValue(followers)
                     completion(currentUser)

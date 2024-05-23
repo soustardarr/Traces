@@ -21,6 +21,8 @@ class ObtainFriendManager {
 
     let serialQueue = DispatchQueue(label: "Firebase.LocationManager.SerialQueue")
 
+    var locationObservers: [String: DatabaseHandle] = [:]
+
     private init() {
         self.obtainEmails()
     }
@@ -35,19 +37,19 @@ class ObtainFriendManager {
 
     @Published var generalFriends: [User]? {
         didSet {
-            self.setupObserver()
+            print("\(generalFriends)!!!!!!!!!!!!!!!!")
+            setupLocationObserver()
         }
     }
 
     var userLocationUpdate: User? {
         didSet {
             locationUpdateForActiveUser?(userLocationUpdate ?? User(name: "", email: ""))
-//            print("\(userLocationUpdate?.location) \(userLocationUpdate?.name)")
+            print("\(userLocationUpdate?.location) \(userLocationUpdate?.name)")
         }
     }
 
     var locationUpdateForActiveUser: ((User) -> ())?
-
 
 
     func obtainEmails() {
@@ -84,25 +86,78 @@ class ObtainFriendManager {
         }
     }
 
-    func setupObserver() {
+    func setupLocationObserver() {
         guard let friends = self.generalFriends else {
             return
         }
         for friend in friends {
             let friendLocationRef = database.child(friend.safeEmail).child("location")
-            friendLocationRef.observe(.value) { snapshot in
-                guard let locationDict = snapshot.value as? [String: Any],
-                      let latitude = locationDict["latitude"] as? Double,
-                      let longitude = locationDict["longitude"] as? Double else {
-                    print("gg")
-                    return
+            if locationObservers[friend.safeEmail] == nil {
+                let handle = friendLocationRef.observe(.value) { snapshot in
+                    guard let locationDict = snapshot.value as? [String: Any],
+                          let latitude = locationDict["latitude"] as? Double,
+                          let longitude = locationDict["longitude"] as? Double else {
+                        print("gg")
+                        return
+                    }
+                    let location = ["latitude": latitude, "longitude": longitude]
+                    let updateUser = User(name: friend.name, email: friend.email, profilePicture: friend.profilePicture, location: location)
+                    self.userLocationUpdate = updateUser
                 }
-                let location = ["latitude": latitude, "longitude": longitude]
-                let updateUser = User(name: friend.name, email: friend.email, profilePicture: friend.profilePicture, location: location)
-                self.userLocationUpdate = updateUser
+                locationObservers[friend.safeEmail] = handle
+
             }
+//            let handle = friendLocationRef.observe(.value) { snapshot in
+//                guard let locationDict = snapshot.value as? [String: Any],
+//                      let latitude = locationDict["latitude"] as? Double,
+//                      let longitude = locationDict["longitude"] as? Double else {
+//                    print("gg")
+//                    return
+//                }
+//                let location = ["latitude": latitude, "longitude": longitude]
+//                let updateUser = User(name: friend.name, email: friend.email, profilePicture: friend.profilePicture, location: location)
+//                self.userLocationUpdate = updateUser
+//            }
+//            locationObservers[friend.safeEmail] = handle
         }
     }
+
+
+    func addLocationObserver(user: User) {
+        let friendLocationRef = database.child(user.safeEmail).child("location")
+        let handle = friendLocationRef.observe(.value) { snapshot in
+            guard let locationDict = snapshot.value as? [String: Any],
+                  let latitude = locationDict["latitude"] as? Double,
+                  let longitude = locationDict["longitude"] as? Double else {
+                print("gg")
+                return
+            }
+            let location = ["latitude": latitude, "longitude": longitude]
+            let updateUser = User(name: user.name, email: user.email, profilePicture: user.profilePicture, location: location)
+            self.userLocationUpdate = updateUser
+        }
+        locationObservers[user.safeEmail] = handle
+    }
+
+
+    func removeLocationObserver(user: User) {
+        guard let handle = locationObservers[user.safeEmail] else {
+            print("нет такого обсервера: \(user.safeEmail)")
+            return
+        }
+        let friendLocationRef = database.child(user.safeEmail).child("location")
+        friendLocationRef.removeObserver(withHandle: handle)
+        locationObservers.removeValue(forKey: user.safeEmail)
+    }
+
+    func removeAllLocationObservers() {
+        for (safeEmail, handle) in locationObservers {
+            let friendLocationRef = database.child(safeEmail).child("location")
+            friendLocationRef.removeObserver(withHandle: handle)
+        }
+        locationObservers.removeAll()
+    }
+
 }
 
 

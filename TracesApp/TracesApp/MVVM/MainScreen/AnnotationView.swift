@@ -43,7 +43,7 @@ class AnnotationView: UIView {
 
     var nameLabel: UILabel = {
         let nameLabel = UILabel()
-        nameLabel.textColor = .white
+        nameLabel.textColor = .black
         nameLabel.font = .systemFont(ofSize: 13)
         nameLabel.textAlignment = .center
         nameLabel.text = "name"

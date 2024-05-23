@@ -8,6 +8,7 @@
 import UIKit
 import MapKit
 import SwiftUI
+import Combine
 
 class MainController: UIViewController {
 
@@ -18,6 +19,8 @@ class MainController: UIViewController {
     private var profile: User?
     private var profileAnnotationView: AnnotationView?
     private var deepLinkVC: UIViewController?
+    private var friends: [User] = []
+    var cancellable: Set<AnyCancellable> = []
 
     init(deepLinkVC: UIViewController) {
         self.deepLinkVC = deepLinkVC
@@ -35,7 +38,8 @@ class MainController: UIViewController {
         super.viewDidLoad()
         setupSettings()
         obtainProfile()
-        obtainAndShowFriends()
+        obtainActiveUser()
+        obtainFriend()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -57,16 +61,14 @@ class MainController: UIViewController {
         mainViewModel?.delegate = self
     }
 
+    
     private func obtainProfile() {
-        guard let email = UserDefaults.standard.string(forKey: "email") else {
-            print("Не удалось получить emil из UserDefaults, он ПУСТ")
-            return
-        }
-        let safeEmail = RealTimeDataBaseManager.safeEmail(emailAddress: email)
+        let safeEmail = UserDefaults.standard.string(forKey: "safeEmail") ?? ""
         DispatchQueue.global(qos: .default).async {
             RealTimeDataBaseManager.shared.getProfileInfo(safeEmail: safeEmail) { result in
                 switch result {
                 case .success(let user):
+                    self.checkingExistenceFriends(user: user)
                     doInMainThread {
                         self.profile = user
                         self.profileAnnotationView = AnnotationView(name: user.name, image: user.profilePicture ?? Data())
@@ -79,18 +81,68 @@ class MainController: UIViewController {
         }
     }
 
+    private func checkingExistenceFriends(user: User) {
+        DispatchQueue.global().asyncAfter(deadline: .now() + 15, execute: {
+            if user.friends?.isEmpty == false, ObtainFriendManager.shared.generalFriends?.isEmpty == true {
+                ObtainFriendManager.shared.obtainEmails()
+            }
+        })
+    }
+
+    private func obtainFriend() {
+        ObtainFriendManager.shared.$generalFriends
+            .sink { [ weak self ] users in
+                guard let strongSelf = self else { return }
+                guard let users = users else { return }
+                if strongSelf.friends.isEmpty {
+                    strongSelf.friends = users
+                } else if strongSelf.friends.count < users.count {
+                    let setFriends = Set(strongSelf.friends)
+                    let setUsers = Set(users)
+                    let differenceUsers = setUsers.subtracting(setFriends)
+                    strongSelf.friends.append(contentsOf: differenceUsers)
+                } else {
+                    let setFriends = Set(strongSelf.friends)
+                    let setUsers = Set(users)
+                    let differenceUsers = setFriends.subtracting(setUsers)
+                    let difFriendNames = Set(differenceUsers.map { $0.name })
+                    for user in Array(differenceUsers) {
+                        ObtainFriendManager.shared.removeLocationObserver(user: user)
+                        for (name, userAnnotation) in strongSelf.friendAnnotations {
+                            if difFriendNames.contains(name) {
+                                strongSelf.friendAnnotations.removeValue(forKey: name)
+                                strongSelf.mainView?.mapView.removeAnnotation(userAnnotation.pointAnnotation)
+                            }
+                        }
+                        for an in strongSelf.mainView?.mapView.annotations ?? [] {
+                            if let title = an.title, difFriendNames.contains(title ?? "") {
+                                strongSelf.mainView?.mapView.removeAnnotation(an)
+                            }
+                        }
+                    }
+                    strongSelf.friends = strongSelf.friends.filter { !differenceUsers.contains($0) }
+                }
+
+            }
+            .store(in: &cancellable)
+    }
+
     private var friendAnnotations = [String: UserAnnotation]()
 
-    private func obtainAndShowFriends() {
+    private func obtainActiveUser() {
         ObtainFriendManager.shared.locationUpdateForActiveUser = { friend in
             if let location = friend.location,
                let latitude = location["latitude"],
                let longitude = location["longitude"] {
                 print("\(latitude), \(longitude) \(friend.safeEmail)")
 
-                if let existingAnnotation = self.friendAnnotations[friend.name]?.pointAnnotation {
-                    // Если аннотация уже существует, обновляем её координаты
+                if let existingAnnotation = self.mainView?.mapView.annotations.first(where: { $0.title == friend.name }) as? MKPointAnnotation {
                     existingAnnotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                    // Обновляем дополнительные представления аннотации
+                    if let annotationView = self.mainView?.mapView.view(for: existingAnnotation) as? AnnotationView {
+                        annotationView.avatarImageView.image = UIImage(data: friend.profilePicture ?? Data()) ?? .profileIcon
+                        annotationView.nameLabel.text = friend.name
+                    }
                 } else {
                     // Если аннотации еще нет, создаем новую и добавляем в словарь
                     let annotation = MKPointAnnotation()
@@ -211,7 +263,6 @@ extension MainController: MKMapViewDelegate {
                     self.mainView?.locationLabel.text = place
                     self.setWeather(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
                 }
-//                self.setWeather(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
             } else if hDistance ?? 0 > horizontalDistanceCity,
                       vDistance ?? 0 > verticalDistanceCity,
                       hDistance ?? 0 < horizontalDistanceCounty,
@@ -221,7 +272,6 @@ extension MainController: MKMapViewDelegate {
                     self.mainView?.locationLabel.text = place
                     self.setWeather(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
                 }
-//                self.setWeather(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
             } else if hDistance ?? 0 > horizontalDistanceCounty,
                       vDistance ?? 0 > verticalDistanceCounty,
                       let county = placemark.country {
@@ -233,37 +283,35 @@ extension MainController: MKMapViewDelegate {
     }
 
 
-
-
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !(annotation is MKUserLocation) else {
             let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "UserLocation")
+            annotationView.subviews.forEach { $0.removeFromSuperview() }
+
             let profileAnnotationViewOptional = AnnotationView(name: profile?.name ?? "", image: profile?.profilePicture ?? Data())
             annotationView.addSubview(profileAnnotationView ?? profileAnnotationViewOptional)
             return annotationView
         }
 
-        // Проверяем, является ли аннотация вашей кастомной аннотацией
         if let friendAnnotation = annotation as? MKPointAnnotation {
             let identifier = "FriendAnnotation"
             var annotationView: MKAnnotationView
 
             if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) {
-                // Если представление аннотации уже существует, используем его
                 dequeuedView.annotation = annotation
                 annotationView = dequeuedView
+                annotationView.subviews.forEach { $0.removeFromSuperview() }
             } else {
-                // Создаем новое кастомное представление для аннотации друга
                 annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-                let annotationInfo: UserAnnotation?
-                if let name = annotationView.annotation?.title {
-                    annotationInfo = friendAnnotations[name ?? ""]
-                    let profileAnnotationView = AnnotationView(name: annotationInfo?.name ?? "", image: annotationInfo?.profilePicture ?? Data())
-                    annotationView.addSubview(profileAnnotationView)
-                    return annotationView
-                } else {
-                    annotationView.image = .add
-                }
+            }
+
+            let annotationInfo: UserAnnotation?
+            if let name = annotationView.annotation?.title {
+                annotationInfo = friendAnnotations[name ?? ""]
+                let profileAnnotationView = AnnotationView(name: annotationInfo?.name ?? "", image: annotationInfo?.profilePicture ?? Data())
+                annotationView.addSubview(profileAnnotationView)
+            } else {
+                annotationView.image = .add
             }
 
             return annotationView

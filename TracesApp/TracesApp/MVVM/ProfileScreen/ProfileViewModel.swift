@@ -13,6 +13,8 @@ class ProfileViewModel {
     func signOut() {
         UserDefaults.standard.removeObject(forKey: "email")
         UserDefaults.standard.removeObject(forKey: "safeEmail")
+        ObtainFriendManager.shared.removeAllLocationObservers()
+        ObtainFriendManager.shared.generalFriends?.removeAll()
         CoreDataManager.shared.deleteAllInfo()
         do {
             try FirebaseAuth.Auth.auth().signOut()

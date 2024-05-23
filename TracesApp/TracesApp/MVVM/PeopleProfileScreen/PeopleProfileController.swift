@@ -7,9 +7,10 @@
 
 import UIKit
 import Combine
+import SwiftUI
 
 protocol PeopleProfileControllerDelegate: AnyObject {
-    func updateUser(user: User)
+    func updateArray(user: User, status: FriendStatus)
 }
 
 class PeopleProfileController: UIViewController {
@@ -19,7 +20,6 @@ class PeopleProfileController: UIViewController {
     private var avatarimage: UIImage
     private var currentUser: User
     private var cancellable: Set<AnyCancellable> = []
-
     weak var delegate: PeopleProfileControllerDelegate?
 
 
@@ -51,7 +51,9 @@ class PeopleProfileController: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        delegate?.updateUser(user: currentUser)
+        let status = peopleProfileViewModel?.checkFriendStatus(with: currentUser) ?? .cleanStatus
+        delegate?.updateArray(user: currentUser, status: status)
+        print(currentUser)
     }
 
     private func setup() {
@@ -64,6 +66,7 @@ class PeopleProfileController: UIViewController {
                 guard let strongSelf = self else { return }
                 let result = self?.peopleProfileViewModel?.checkFriendStatus(with: user)
                 self?.currentUser = user
+                self?.avatarimage = UIImage(data: user.profilePicture ?? Data()) ?? .profileIcon
                 strongSelf.setupStatusFriendButton(result: result ?? .cleanStatus)
             })
             .store(in: &cancellable)
@@ -98,6 +101,14 @@ class PeopleProfileController: UIViewController {
 }
 
 extension PeopleProfileController: PeopleProfileViewDelegate {
+
+    func didTappedMessageButton() {
+        let chatController = UIHostingController(rootView: LogChatSUIView(user: currentUser))
+        let navVC = UINavigationController(rootViewController: chatController)
+        navVC.title = currentUser.name
+        present(navVC, animated: true)
+    }
+    
     func didTappedFriendButton() {
         peopleProfileViewModel?.changeFriendStatus()
         setupDataBindings()

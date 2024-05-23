@@ -7,7 +7,15 @@
 
 import Foundation
 
-struct User: Identifiable {
+struct User: Identifiable, Hashable {
+    static func == (lhs: User, rhs: User) -> Bool {
+        return lhs.safeEmail == rhs.safeEmail
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(safeEmail)
+    }
+    
     var id: String { safeEmail }
     var name: String
     var email: String

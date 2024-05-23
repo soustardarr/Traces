@@ -71,8 +71,8 @@ class MainViewModel: NSObject {
         switch authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
             self.locationManager?.allowsBackgroundLocationUpdates = true
-//            self.locationManager?.startUpdatingLocation()
-            self.locationManager?.startMonitoringSignificantLocationChanges()
+            self.locationManager?.startUpdatingLocation()
+//            self.locationManager?.startMonitoringSignificantLocationChanges()
         case .notDetermined:
             // Запрашиваем разрешение
             self.locationManager?.requestAlwaysAuthorization()
@@ -121,21 +121,3 @@ extension MainViewModel: CLLocationManagerDelegate {
 
 }
 
-
-//MARK: - отображение друзей на карте
-extension MainViewModel {
-
-    func obtainFriends() {
-//        RealTimeDataBaseManager.shared.getProfileInfoFriends { users in
-//            self.friends = users
-//        }
-    }
-
-    func observeFriendsLocation() {
-
-//        RealTimeDataBaseManager.shared.observeLocation1(friends: self.friends ?? []) { updatedFriends in
-//            self.updatedFriends = updatedFriends
-//        }
-
-    }
-}

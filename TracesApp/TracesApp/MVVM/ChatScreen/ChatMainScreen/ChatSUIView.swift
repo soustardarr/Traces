@@ -63,11 +63,19 @@ struct ChatSUIView: View {
                                             .font(.system(size: 16, weight: .bold))
                                             .foregroundStyle(.black)
                                     }
-                                    Text(user.lastMessage?.text ?? "Начните общение!")
-                                        .font(.system(size: 12, weight: .light))
-                                        .frame(alignment: .leading)
-                                        .foregroundStyle(.black)
-                                    Spacer()
+                                    if let text = user.lastMessage?.text, !text.isEmpty {
+                                        Text(text)
+                                            .font(.system(size: 12, weight: .light))
+                                            .frame(alignment: .leading)
+                                            .foregroundStyle(.black)
+                                        Spacer()
+                                    } else {
+                                        Text("Начните общение!")
+                                            .font(.system(size: 12, weight: .light))
+                                            .frame(alignment: .leading)
+                                            .foregroundStyle(.black)
+                                        Spacer()
+                                    }
                                 }
                                 Spacer()
                             }

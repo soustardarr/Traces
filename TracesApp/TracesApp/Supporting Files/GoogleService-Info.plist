@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyCv9hCIGcHFaJ2m0IiRswegjnQZ1Np7Cec</string>
+	<string>AIzaSyBTo0Hp7j-a6CCZhvE3IinGKsbd3_xVnWE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>914023103882</string>
+	<string>96842952607</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>ru.ruslan.TracesApp</string>
+	<string>ru.ruslankozlov.tracesApp</string>
 	<key>PROJECT_ID</key>
-	<string>traces-3f969</string>
+	<string>tracesapplication</string>
 	<key>STORAGE_BUCKET</key>
-	<string>traces-3f969.appspot.com</string>
+	<string>tracesapplication.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:914023103882:ios:2365e6ae240726387b5c73</string>
+	<string>1:96842952607:ios:bd73d6573d85e671ab17aa</string>
 </dict>
 </plist>

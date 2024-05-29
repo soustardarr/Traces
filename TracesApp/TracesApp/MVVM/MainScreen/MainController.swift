@@ -65,13 +65,15 @@ class MainController: UIViewController {
     private func obtainProfile() {
         let safeEmail = UserDefaults.standard.string(forKey: "safeEmail") ?? ""
         ObtainFriendManager.shared.obtainEmails()
-        RealTimeDataBaseManager.shared.getProfileInfo(safeEmail: safeEmail) { result in
+        RealTimeDataBaseManager.shared.getProfileInfo(safeEmail: safeEmail) { [ weak self ] result in
             switch result {
             case .success(let user):
                 doInMainThread {
-                    self.profile = user
-                    self.profileAnnotationView = AnnotationView(name: user.name, image: user.profilePicture ?? Data())
-                    // тут нужно обновить анотациб пользователя
+                    self?.profile = user
+                    self?.profileAnnotationView = AnnotationView(name: user.name, image: user.profilePicture ?? Data())
+//                    self?.mainViewModel?.realTimeRegion()
+//                    self?.mainView?.mapView.setRegion(self?.userRegion ?? MKCoordinateRegion(), animated: true)
+//                    self?.mainView?.mapView.setUserTrackingMode(.follow, animated: true)
                 }
             case .failure(let error):
                 print("ошибка получения профиля для MainVC \(error)")
@@ -79,6 +81,21 @@ class MainController: UIViewController {
         }
 
     }
+
+//    private func updateUserAnnotation(with coordinate: CLLocationCoordinate2D) {
+//        if let existingAnnotation = self.mainView?.mapView.annotations.first(where: { $0.title == self.profile?.name }) as? MKPointAnnotation {
+//            existingAnnotation.coordinate = coordinate
+//            if let annotationView = self.mainView?.mapView.view(for: existingAnnotation) as? AnnotationView {
+//                annotationView.avatarImageView.image = UIImage(data: self.profile?.profilePicture ?? Data()) ?? .profileIcon
+//                annotationView.nameLabel.text = self.profile?.name
+//            }
+//        } else {
+//            let annotation = MKPointAnnotation()
+//            annotation.coordinate = coordinate
+//            annotation.title = self.profile?.name
+//            self.mainView?.mapView.addAnnotation(annotation)
+//        }
+//    }
 
 
     private func obtainFriend() {

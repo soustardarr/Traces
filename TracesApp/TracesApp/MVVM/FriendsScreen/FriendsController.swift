@@ -211,7 +211,6 @@ extension FriendsController: PeopleProfileControllerDelegate {
     func updateArray(user: User, status: FriendStatus) {
 
         reloadPeopleArray(user: user)
-        let selfSafeEmail = UserDefaults.standard.string(forKey: "safeEmail") ?? ""
 
         switch status {
         case .selfSubscribed:

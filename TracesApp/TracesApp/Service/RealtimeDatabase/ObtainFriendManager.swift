@@ -41,7 +41,7 @@ class ObtainFriendManager {
 
     @Published var generalFriends: [User]? {
         didSet {
-            print("\(generalFriends)!!!!!!!!!!!!!!!!")
+//            print("\(generalFriends)!!!!!!!!!!!!!!!!")
             setupLocationObserver()
         }
     }

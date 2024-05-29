@@ -31,13 +31,6 @@ class AuthorizationViewModel {
             UserDefaults.standard.set(safeEmail, forKey: "safeEmail")
             completion(true)
         }
-
-//        DispatchQueue.global().asyncAfter(deadline: .now() + 20, execute: {
-//            if ObtainFriendManager.shared.generalFriends?.isEmpty == true {
-//                ObtainFriendManager.shared.obtainEmails()
-//            }
-//        })
-
     }
 
 }

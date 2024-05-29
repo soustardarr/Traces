@@ -18,25 +18,7 @@ class ChatViewModel: ObservableObject {
     init() {
         ObtainFriendManager.shared.$generalFriends.receive(on: DispatchQueue.main).sink { [weak self] users in
             if let users = users {
-//                let setUsers = Set(users)
-//                if users.count > self?.friends?.count ?? 0 {
-//                    if let friends = self?.friends {
-//                        let setFriends = Set(friends)
-//                        let newFriends = setUsers.subtracting(setFriends)
-//
-//                        self?.friends?.append(contentsOf: newFriends)
-//                    } else {
-//                        self?.friends = Array(setUsers)
-//                    }
-//                } else if users.count < self?.friends?.count ?? 0 {
-//                    let setUsers = Set(users)
-//                        if var friends = self?.friends {
-//                            let setFriends = Set(friends)
-//                            let friendsToRemove = setFriends.subtracting(setUsers)
-//                            friends.removeAll(where: { friendsToRemove.contains($0) })
-//                            self?.friends = friends
-//                        }
-//                }
+
                 self?.friends = users
                 self?.fetchLastMessage()
             } else {

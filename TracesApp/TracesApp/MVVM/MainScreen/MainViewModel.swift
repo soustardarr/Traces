@@ -93,6 +93,7 @@ extension MainViewModel: CLLocationManagerDelegate {
         
         if let location = locations.last {
             RealTimeDataBaseManager.shared.setLocation(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+            RealTimeDataBaseManager.shared.setRoute(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         }
 
     }

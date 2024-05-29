@@ -23,14 +23,6 @@ class ObtainFriendManager {
 
     var locationObservers: [String: DatabaseHandle] = [:]
 
-//    private init() {
-//        self.obtainEmails()
-//    }
-
-//    func map() {
-//        self.obtainEmails()
-//    }
-
     var friendsEmail: [String]? {
         didSet{
             serialQueue.async {
@@ -111,18 +103,7 @@ class ObtainFriendManager {
                 locationObservers[friend.safeEmail] = handle
 
             }
-//            let handle = friendLocationRef.observe(.value) { snapshot in
-//                guard let locationDict = snapshot.value as? [String: Any],
-//                      let latitude = locationDict["latitude"] as? Double,
-//                      let longitude = locationDict["longitude"] as? Double else {
-//                    print("gg")
-//                    return
-//                }
-//                let location = ["latitude": latitude, "longitude": longitude]
-//                let updateUser = User(name: friend.name, email: friend.email, profilePicture: friend.profilePicture, location: location)
-//                self.userLocationUpdate = updateUser
-//            }
-//            locationObservers[friend.safeEmail] = handle
+
         }
     }
 

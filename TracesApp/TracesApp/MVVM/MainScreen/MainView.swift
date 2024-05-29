@@ -15,6 +15,7 @@ protocol MainViewDelegate: AnyObject {
     func didTappedButtonLocation()
     func didTappedButtonFriends()
     func didTappedButtonMessages()
+    func didTappedCloseButton()
 }
 
 class MainView: UIView {
@@ -141,7 +142,45 @@ class MainView: UIView {
         userForMap.layer.cornerRadius = 20
         return userForMap
     }()
-    
+
+
+    var buttonClose: UIImageView = {
+        let buttonClose = UIImageView()
+        let colorConfig = UIImage.SymbolConfiguration(paletteColors: [.systemIndigo])
+        let messagesImage = UIImage(systemName: "xmark.circle.fill", withConfiguration: colorConfig)
+        buttonClose.image = messagesImage
+        buttonClose.isUserInteractionEnabled = true
+        buttonClose.isHidden = true
+        buttonClose.translatesAutoresizingMaskIntoConstraints = false
+        return buttonClose
+    }()
+
+    var overlayView: UIView = {
+        let overlayView = UIView()
+        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
+        overlayView.isUserInteractionEnabled = false // Разрешает перехват событий нажатия, но не делает это, так как цвет фона прозрачный
+        overlayView.isHidden = true
+        return overlayView
+    }()
+
+    func toggleUI() {
+        locationLabel.isHidden.toggle()
+        weatherLabel.isHidden.toggle()
+        buttonProfile.isHidden.toggle()
+        buttonSettings.isHidden.toggle()
+        buttonWorld.isHidden.toggle()
+        buttonLocation.isHidden.toggle()
+        buttonFriends.isHidden.toggle()
+        buttonMessages.isHidden.toggle()
+        grayViewBottom.isHidden.toggle()
+        grayViewTop.isHidden.toggle()
+        overlayView.isHidden.toggle()
+        buttonClose.isHidden.toggle()
+    }
+
+
+
 
     private func addGesture() {
         let gestureProfile = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))
@@ -154,6 +193,12 @@ class MainView: UIView {
 
         let gestureChat = UITapGestureRecognizer(target: self, action: #selector(didTapChatButton))
         buttonMessages.addGestureRecognizer(gestureChat)
+
+        let gestureWorld = UITapGestureRecognizer(target: self, action: #selector(didTapButtonWorld))
+        buttonWorld.addGestureRecognizer(gestureWorld)
+
+        let gestureClose = UITapGestureRecognizer(target: self, action: #selector(didTapCloseButton))
+        buttonClose.addGestureRecognizer(gestureClose)
     }
 
     @objc private func didTapChatButton() {
@@ -164,13 +209,22 @@ class MainView: UIView {
         delegate?.didTappedButtonLocation()
     }
 
+    @objc private func didTapFriendsButton() {
+        delegate?.didTappedButtonFriends()
+    }
+
     @objc private func didTapProfileButton() {
         delegate?.didTappedButtonProfile()
     }
 
-    @objc private func didTapFriendsButton() {
-        delegate?.didTappedButtonFriends()
+    @objc private func didTapButtonWorld() {
+        delegate?.didTappedButtonWorld()
     }
+
+    @objc private func didTapCloseButton() {
+        delegate?.didTappedCloseButton()
+    }
+
 
 
     override init(frame: CGRect) {
@@ -182,7 +236,6 @@ class MainView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 
 
     private func setUpLayout() {
@@ -197,11 +250,18 @@ class MainView: UIView {
         addSubview(buttonLocation)
         addSubview(buttonFriends)
         addSubview(buttonMessages)
+        addSubview(overlayView)
+        addSubview(buttonClose)
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: topAnchor),
             mapView.leadingAnchor.constraint(equalTo: leadingAnchor),
             mapView.trailingAnchor.constraint(equalTo: trailingAnchor),
             mapView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            buttonClose.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 1),
+            buttonClose.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            buttonClose.widthAnchor.constraint(equalToConstant: 35),
+            buttonClose.heightAnchor.constraint(equalToConstant: 35),
 
             locationLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             locationLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
@@ -248,7 +308,12 @@ class MainView: UIView {
             grayViewTop.centerXAnchor.constraint(equalTo: buttonSettings.centerXAnchor),
             grayViewTop.centerYAnchor.constraint(equalTo: buttonSettings.centerYAnchor),
             grayViewTop.widthAnchor.constraint(equalToConstant: 40),
-            grayViewTop.heightAnchor.constraint(equalToConstant: 145)
+            grayViewTop.heightAnchor.constraint(equalToConstant: 145),
+
+            overlayView.topAnchor.constraint(equalTo: topAnchor),
+            overlayView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            overlayView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            overlayView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 

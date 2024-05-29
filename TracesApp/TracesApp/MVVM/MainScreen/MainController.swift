@@ -21,6 +21,7 @@ class MainController: UIViewController {
     private var deepLinkVC: UIViewController?
     private var friends: [User] = []
     var cancellable: Set<AnyCancellable> = []
+    var polyline: MKPolyline?
 
     init(deepLinkVC: UIViewController) {
         self.deepLinkVC = deepLinkVC
@@ -71,9 +72,6 @@ class MainController: UIViewController {
                 doInMainThread {
                     self?.profile = user
                     self?.profileAnnotationView = AnnotationView(name: user.name, image: user.profilePicture ?? Data())
-//                    self?.mainViewModel?.realTimeRegion()
-//                    self?.mainView?.mapView.setRegion(self?.userRegion ?? MKCoordinateRegion(), animated: true)
-//                    self?.mainView?.mapView.setUserTrackingMode(.follow, animated: true)
                 }
             case .failure(let error):
                 print("ошибка получения профиля для MainVC \(error)")
@@ -81,21 +79,6 @@ class MainController: UIViewController {
         }
 
     }
-
-//    private func updateUserAnnotation(with coordinate: CLLocationCoordinate2D) {
-//        if let existingAnnotation = self.mainView?.mapView.annotations.first(where: { $0.title == self.profile?.name }) as? MKPointAnnotation {
-//            existingAnnotation.coordinate = coordinate
-//            if let annotationView = self.mainView?.mapView.view(for: existingAnnotation) as? AnnotationView {
-//                annotationView.avatarImageView.image = UIImage(data: self.profile?.profilePicture ?? Data()) ?? .profileIcon
-//                annotationView.nameLabel.text = self.profile?.name
-//            }
-//        } else {
-//            let annotation = MKPointAnnotation()
-//            annotation.coordinate = coordinate
-//            annotation.title = self.profile?.name
-//            self.mainView?.mapView.addAnnotation(annotation)
-//        }
-//    }
 
 
     private func obtainFriend() {
@@ -166,10 +149,13 @@ class MainController: UIViewController {
 
     }
 
+
+
 }
 
 
 extension MainController: MainViewDelegate {
+    
 
     func didTappedButtonProfile() {
         let profileVC = ProfileController(user: profile ?? User(name: "", email: ""))
@@ -190,7 +176,38 @@ extension MainController: MainViewDelegate {
 
     func didTappedButtonSettings() { }
 
-    func didTappedButtonWorld() { }
+
+    func didTappedCloseButton() {
+        mainView?.toggleUI()
+        mainView?.mapView.removeOverlay(polyline ?? MKPolyline())
+    }
+
+    func didTappedButtonWorld() {
+        mainView?.toggleUI()
+        RealTimeDataBaseManager.shared.obtainRouteArray { array in
+            guard let array = array else {
+                return
+            }
+            self.drawRoute(routeArray: array)
+        }
+
+        
+    }
+
+    func drawRoute(routeArray: [[String: Double]]) {
+        var coordinates: [CLLocationCoordinate2D] = []
+
+        for dict in routeArray {
+            if let latitude = dict["latitude"], let longitude = dict["longitude"] {
+                let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                coordinates.append(coordinate)
+            }
+        }
+
+        polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
+        mainView?.mapView.addOverlay(polyline ?? MKPolyline())
+    }
+
 
     
     func didTappedButtonMessages() {
@@ -213,6 +230,16 @@ extension MainController: MainViewModelDelegate {
 
 
 extension MainController: MKMapViewDelegate {
+
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if overlay is MKPolyline {
+            let renderer = MKPolylineRenderer(overlay: overlay)
+            renderer.strokeColor = .systemIndigo
+            renderer.lineWidth = 6.0
+            return renderer
+        }
+        return MKOverlayRenderer(overlay: overlay)
+    }
 
     func getDistance() -> [String: CLLocationDistance] {
         let visibleRegion = mainView?.mapView.visibleMapRect

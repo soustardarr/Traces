@@ -141,7 +141,7 @@ extension FriendsController: UITableViewDataSource {
         if tableView == friendsView?.friendsTableView {
             return friends.count
         } else if tableView == friendsView?.peopleTableView {
-            if self.results != nil {
+            if !results.isEmpty {
                 return self.results.count
             }
         }
@@ -157,7 +157,7 @@ extension FriendsController: UITableViewDataSource {
             return cell ?? UITableViewCell()
         } else if tableView == friendsView?.peopleTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: PeopleViewCell.reuseIdentifier, for: indexPath) as? PeopleViewCell
-            if results != nil {
+            if !results.isEmpty {
                 let name = results[indexPath.row].name
                 let email = results[indexPath.row].email
                 let friends = results[indexPath.row].friends
@@ -230,9 +230,13 @@ extension FriendsController: PeopleProfileControllerDelegate {
         case .inFriends:
             if !friends.contains(where: { $0.safeEmail == user.safeEmail}) {
                 friends.append(user)
-                ObtainFriendManager.shared.generalFriends?.append(user)
-//                ObtainFriendManager.shared.addLocationObserver(user: user)
-                self.friendsView?.friendsTableView.reloadData()
+                if ObtainFriendManager.shared.generalFriends != nil {
+                    ObtainFriendManager.shared.generalFriends?.append(user)
+                    self.friendsView?.friendsTableView.reloadData()
+                } else {
+                    ObtainFriendManager.shared.generalFriends = [ user ]
+                    self.friendsView?.friendsTableView.reloadData()
+                }
             }
         case .cleanStatus:
             print("ничего не делаем")

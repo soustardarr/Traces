@@ -73,8 +73,4 @@ extension RealTimeDataBaseManager {
         }
     }
 
-
-
-
-
 }

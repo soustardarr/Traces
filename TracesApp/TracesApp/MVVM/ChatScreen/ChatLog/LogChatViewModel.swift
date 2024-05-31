@@ -23,8 +23,7 @@ class LogChatViewModel: ObservableObject {
     }
 
     private func fetchMessages() {
-        guard let email = UserDefaults.standard.string(forKey: "email") else { return }
-        let fromUserEmail = RealTimeDataBaseManager.safeEmail(emailAddress: email)
+        guard let fromUserEmail = UserDefaults.standard.string(forKey: "safeEmail") else { return }
         guard let toUserEmail = user?.safeEmail else { return }
 
         FirestoreManager.shared.firestore
@@ -52,8 +51,7 @@ class LogChatViewModel: ObservableObject {
     }
 
     func handleSendMessages() {
-        guard let email = UserDefaults.standard.string(forKey: "email") else { return }
-        let fromUserEmail = RealTimeDataBaseManager.safeEmail(emailAddress: email)
+        guard let fromUserEmail = UserDefaults.standard.string(forKey: "safeEmail") else { return }
 
         guard let toUserEmail = user?.safeEmail else { return }
 
@@ -116,9 +114,9 @@ class LogChatViewModel: ObservableObject {
             .collection("messages")
             .document(fromEmail)
 
-        let dataForInterlocutor = [FirebaseConstants.timestamp: Timestamp(), FirebaseConstants.text: self.textField, FirebaseConstants.fromUserEmail: fromEmail, FirebaseConstants.toUserEmail: toEmail, FirebaseConstants.readIt: 0 ] as [String: Any]
+//        let _ = [FirebaseConstants.timestamp: Timestamp(), FirebaseConstants.text: self.textField, FirebaseConstants.fromUserEmail: fromEmail, FirebaseConstants.toUserEmail: toEmail, FirebaseConstants.readIt: 0 ] as [String: Any]
 
-       // ????
+ // баг фикс
         documentForInterlocutor.setData(data) { error in
             if let error = error {
                 self.errorMessage = "не удалось сохранить last_messaage: \(error)"

@@ -102,6 +102,12 @@ class RegistrationView: UIView {
         return passwordTextField
     }()
 
+//    var scrollView: UIScrollView = {
+//        let scrollView = UIScrollView()
+//        scrollView.translatesAutoresizingMaskIntoConstraints = false
+//        return scrollView
+//    }()
+
 
     lazy var doneSignUpButton: UIButton = {
         let button = UIButton()

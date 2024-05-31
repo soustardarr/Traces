@@ -41,7 +41,7 @@ class ObtainFriendManager {
     var userLocationUpdate: User? {
         didSet {
             locationUpdateForActiveUser?(userLocationUpdate ?? User(name: "", email: ""))
-            print("\(userLocationUpdate?.location) \(userLocationUpdate?.name)")
+//            print("\(userLocationUpdate?.location) \(userLocationUpdate?.name)")
         }
     }
 

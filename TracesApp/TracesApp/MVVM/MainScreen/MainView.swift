@@ -25,6 +25,7 @@ class MainView: UIView {
     var mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.showsUserLocation = true
+        mapView.showsCompass = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
         return mapView
     }()
@@ -157,11 +158,19 @@ class MainView: UIView {
 
     var overlayView: UIView = {
         let overlayView = UIView()
-        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.2)
         overlayView.translatesAutoresizingMaskIntoConstraints = false
-        overlayView.isUserInteractionEnabled = false // Разрешает перехват событий нажатия, но не делает это, так как цвет фона прозрачный
+        overlayView.isUserInteractionEnabled = false
         overlayView.isHidden = true
         return overlayView
+    }()
+
+    var tracesAnnotationView: UIView = {
+        let tracesAnnotationView = UIView()
+        tracesAnnotationView.backgroundColor = UIColor.black.withAlphaComponent(0.0)
+        tracesAnnotationView.translatesAutoresizingMaskIntoConstraints = false
+        tracesAnnotationView.isUserInteractionEnabled = false 
+        return tracesAnnotationView
     }()
 
     func toggleUI() {

@@ -21,7 +21,6 @@ class MainController: UIViewController {
     private var deepLinkVC: UIViewController?
     private var friends: [User] = []
     var cancellable: Set<AnyCancellable> = []
-    var polyline: MKPolyline?
 
     init(deepLinkVC: UIViewController) {
         self.deepLinkVC = deepLinkVC
@@ -179,7 +178,12 @@ extension MainController: MainViewDelegate {
 
     func didTappedCloseButton() {
         mainView?.toggleUI()
-        mainView?.mapView.removeOverlay(polyline ?? MKPolyline())
+        let annotationsToRemove = mainView?.mapView.annotations.filter { $0.title??.starts(with: "traces") == true }
+
+        // Удаляем отфильтрованные аннотации с карты
+        if let annotationsToRemove = annotationsToRemove {
+            mainView?.mapView.removeAnnotations(annotationsToRemove)
+        }
     }
 
     func didTappedButtonWorld() {
@@ -195,17 +199,20 @@ extension MainController: MainViewDelegate {
     }
 
     func drawRoute(routeArray: [[String: Double]]) {
-        var coordinates: [CLLocationCoordinate2D] = []
 
+        var cnt = 0
         for dict in routeArray {
             if let latitude = dict["latitude"], let longitude = dict["longitude"] {
                 let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-                coordinates.append(coordinate)
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = coordinate
+                annotation.title = "traces\(cnt)"
+
+                mainView?.mapView.addAnnotation(annotation)
+                cnt += 1
             }
         }
 
-        polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
-        mainView?.mapView.addOverlay(polyline ?? MKPolyline())
     }
 
 
@@ -230,16 +237,6 @@ extension MainController: MainViewModelDelegate {
 
 
 extension MainController: MKMapViewDelegate {
-
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        if overlay is MKPolyline {
-            let renderer = MKPolylineRenderer(overlay: overlay)
-            renderer.strokeColor = .systemIndigo
-            renderer.lineWidth = 6.0
-            return renderer
-        }
-        return MKOverlayRenderer(overlay: overlay)
-    }
 
     func getDistance() -> [String: CLLocationDistance] {
         let visibleRegion = mainView?.mapView.visibleMapRect
@@ -329,7 +326,20 @@ extension MainController: MKMapViewDelegate {
             return annotationView
         }
 
-        if let friendAnnotation = annotation as? MKPointAnnotation {
+        if annotation.title??.starts(with: "traces") == true {
+            var annotationView: TracesAnnotationView
+            if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: "TracesAnnotationIdentifier") as? TracesAnnotationView {
+                dequeuedView.annotation = annotation
+                annotationView = dequeuedView
+                annotationView.subviews.forEach { $0.removeFromSuperview() }
+            } else {
+                annotationView = TracesAnnotationView(annotation: annotation, reuseIdentifier: "TracesAnnotationIdentifier")
+            }
+            annotationView.addSubview(annotationView.tracesAnnotationView)
+            return annotationView
+        }
+
+        if annotation is MKPointAnnotation {
             let identifier = "FriendAnnotation"
             var annotationView: MKAnnotationView
 
@@ -350,8 +360,11 @@ extension MainController: MKMapViewDelegate {
                 annotationView.image = .add
             }
 
+            
+
             return annotationView
         }
+
 
         return nil
     }

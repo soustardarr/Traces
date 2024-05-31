@@ -50,7 +50,7 @@ class AnnotationView: UIView {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         return nameLabel
     }()
-//?????????
+
     init(name: String, image: Data) {
         super.init(frame: .zero)
         doInMainThread {
@@ -70,6 +70,10 @@ class AnnotationView: UIView {
         whiteBackgroundView.addSubview(avatarImageView)
         clearBackgroundContainer.addSubview(nameLabel)
         NSLayoutConstraint.activate([
+
+            clearBackgroundContainer.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            clearBackgroundContainer.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            
             whiteBackgroundView.centerXAnchor.constraint(equalTo: clearBackgroundContainer.centerXAnchor),
             whiteBackgroundView.centerYAnchor.constraint(equalTo: clearBackgroundContainer.centerYAnchor),
 

@@ -38,8 +38,7 @@ class FriendsViewModel {
         guard hasFetched else {
             return
         }
-        let email = UserDefaults.standard.string(forKey: "email") ?? ""
-        let safeEmail  = RealTimeDataBaseManager.safeEmail(emailAddress: email)
+        let safeEmail  = UserDefaults.standard.string(forKey: "safeEmail") ?? ""
         var resultUsers: [User] = self.users.filter {
             return $0.name.lowercased().hasPrefix(text.lowercased())
         }

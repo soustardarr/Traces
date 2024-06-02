@@ -14,13 +14,16 @@ import Combine
 protocol MainViewModelDelegate: AnyObject {
     func didUpdateRegion(_ region: MKCoordinateRegion)
     func didFailWithError(_ error: Error)
+//    func showLocationErrorVC()
 }
 
 class MainViewModel: NSObject {
 
     // MARK: - Stored prop
 
-    var locationManager: CLLocationManager?
+//    var locationManager = CLLocationManager()
+    var locationManager = LocationManager.shared.locationManager
+
     weak var delegate: MainViewModelDelegate?
     
     var regionUser: MKCoordinateRegion? {
@@ -32,7 +35,7 @@ class MainViewModel: NSObject {
     var getUserRegion: ((MKCoordinateRegion?) -> ())?
 
     func realTimeRegion() {
-        guard let location = locationManager?.location else { return }
+        guard let location = locationManager.location else { return }
         let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
         regionUser = region
     }
@@ -40,31 +43,33 @@ class MainViewModel: NSObject {
     // MARK: - Methods
     override init() {
         super.init()
-        setupSettings()
+//        LocationManager.shared.createManager()
+        locationManager.delegate = self
+        requestLocation()
     }
-
-    private func setupSettings() {
-
-        self.locationManager = CLLocationManager()
-        self.locationManager?.delegate = self
-
-        let authorizationStatus = self.locationManager?.authorizationStatus
+    private func requestLocation() {
+        let authorizationStatus = locationManager.authorizationStatus
         switch authorizationStatus {
         case .notDetermined:
-//            self.locationManager?.requestAlwaysAuthorization()
-            self.locationManager?.requestWhenInUseAuthorization()
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.requestAlwaysAuthorization()
         case .authorizedWhenInUse:
-            self.locationManager?.requestAlwaysAuthorization()
-            self.locationManager?.allowsBackgroundLocationUpdates = true
-            self.locationManager?.startUpdatingLocation()
+            locationManager.allowsBackgroundLocationUpdates = true
+            locationManager.startUpdatingLocation()
+            locationManager.requestAlwaysAuthorization()
         case .authorizedAlways:
-            self.locationManager?.allowsBackgroundLocationUpdates = true
-            self.locationManager?.startUpdatingLocation()
-        default:
-            // Пользователь запретил использование местоположения
-            print("Location permissions denied.")
+            locationManager.allowsBackgroundLocationUpdates = true
+            locationManager.startUpdatingLocation()
+        case .denied, .restricted:
+//            delegate?.showLocationErrorVC()
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.requestAlwaysAuthorization()
+        @unknown default:
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.requestAlwaysAuthorization()
         }
     }
+
 }
 
 // MARK: - Delegates
@@ -73,30 +78,53 @@ extension MainViewModel: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard FirebaseAuth.Auth.auth().currentUser != nil else { return }
-        
-        if let location = locations.last {
-            RealTimeDataBaseManager.shared.setLocation(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-            RealTimeDataBaseManager.shared.setRoute(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+
+        switch locationManager.authorizationStatus {
+        case .authorizedAlways, .authorizedWhenInUse:
+            if let location = locations.last {
+                RealTimeDataBaseManager.shared.setLocation(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+                RealTimeDataBaseManager.shared.setRoute(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+            }
+        case .denied, .restricted:
+//            self.requestLocation()
+            //                delegate?.showLocationErrorVC()
+            // Пользователь запретил использование местоположения, продолжаем запрашивать разрешение
+            print("fdsfsdfdsfds")
+        case .notDetermined:
+//            self.requestLocation()
+            print("fdsfsdfdsfds")
+
+        @unknown default:
+//            self.requestLocation()
+            print("fdsfsdfdsfds")
+
         }
+
 
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-//        checkLocationAuthorization()
-
         guard let location = manager.location else { return }
-        switch manager.authorizationStatus {
-        case .authorizedAlways, .authorizedWhenInUse:
+        let authorizationStatus = manager.authorizationStatus
+
+        switch authorizationStatus {
+        case .authorizedWhenInUse:
+            self.requestLocation()
             let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
             self.delegate?.didUpdateRegion(region)
-        case .denied:
-            print("")
-        case .notDetermined, .restricted:
-            print("")
-        default:
-            print("")
-
+        case .authorizedAlways:
+            let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+            self.delegate?.didUpdateRegion(region)
+        case .denied, .restricted:
+            self.requestLocation()
+            //                delegate?.showLocationErrorVC()
+            // Пользователь запретил использование местоположения, продолжаем запрашивать разрешение
+        case .notDetermined:
+            self.requestLocation()
+        @unknown default:
+            self.requestLocation()
         }
+
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -104,45 +132,3 @@ extension MainViewModel: CLLocationManagerDelegate {
     }
 
 }
-
-
-
-//    private func checkLocationAuthorization() {
-//        guard let locationManager = locationManager,
-//              let location = locationManager.location else { return }
-//        switch locationManager.authorizationStatus {
-//        case .authorizedAlways, .authorizedWhenInUse:
-//            let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
-//            self.delegate?.didUpdateRegion(region)
-//        case .denied:
-//            print("")
-//        case .notDetermined, .restricted:
-//            print("")
-//        default:
-//            print("")
-//
-//        }
-//
-//    }
-
-//    private func setupSettings() {
-//
-//        self.locationManager = CLLocationManager()
-//        self.locationManager?.delegate = self
-//
-//        // Проверяем статус авторизации перед запросом
-//        let authorizationStatus = self.locationManager?.authorizationStatus
-//        switch authorizationStatus {
-//        case .authorizedAlways, .authorizedWhenInUse:
-//            self.locationManager?.allowsBackgroundLocationUpdates = true
-//            self.locationManager?.startUpdatingLocation()
-////            self.locationManager?.startMonitoringSignificantLocationChanges()
-//        case .notDetermined:
-//            // Запрашиваем разрешение
-//            self.locationManager?.requestAlwaysAuthorization()
-//            self.locationManager?.requestWhenInUseAuthorization()
-//        default:
-//            // Пользователь запретил использование местоположения
-//            print("Location permissions denied.")
-//        }
-//    }

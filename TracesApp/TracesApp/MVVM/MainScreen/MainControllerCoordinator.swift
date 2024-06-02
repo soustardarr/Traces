@@ -11,6 +11,7 @@ import UIKit
 class MainControllerCoordinator: BaseCoordinator {
 
     private var navigationController: UINavigationController
+    private var mainController: MainController?
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -23,11 +24,18 @@ class MainControllerCoordinator: BaseCoordinator {
     }
     
     override func startWithDeeplinkVC(_ viewController: UIViewController) {
-        let mainController = MainController(deepLinkVC: viewController)
-        mainController.mainControllerCoordinator = self
-        navigationController.pushViewController(mainController, animated: true)
-        
+        mainController?.deepLinkVC = viewController
+        mainController?.mainControllerCoordinator = self
+        navigationController.pushViewController(mainController ?? MainController(deepLinkVC: viewController), animated: true)
+
     }
 
+    // ретейн цикл??
 
+//    override func startWithDeeplinkVC(_ viewController: UIViewController) {
+//        let mainController = MainController(deepLinkVC: viewController)
+//        mainController.mainControllerCoordinator = self
+//        navigationController.pushViewController(mainController, animated: true)
+//
+//    }
 }

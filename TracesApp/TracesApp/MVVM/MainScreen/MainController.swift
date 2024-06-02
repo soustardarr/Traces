@@ -9,6 +9,7 @@ import UIKit
 import MapKit
 import SwiftUI
 import Combine
+import FittedSheets
 
 class MainController: UIViewController {
 
@@ -18,7 +19,7 @@ class MainController: UIViewController {
     private var userRegion: MKCoordinateRegion?
     private var profile: User?
     private var profileAnnotationView: AnnotationView?
-    private var deepLinkVC: UIViewController?
+    var deepLinkVC: UIViewController?
     private var friends: [User] = []
     var cancellable: Set<AnyCancellable> = []
 
@@ -70,13 +71,27 @@ class MainController: UIViewController {
             case .success(let user):
                 doInMainThread {
                     self?.profile = user
-                    self?.profileAnnotationView = AnnotationView(name: user.name, image: user.profilePicture ?? Data())
+                    self?.mainView?.mapView.annotations.forEach({ ann in
+                        if ann is MKUserLocation {
+                            self?.profileAnnotationView = AnnotationView(name: user.name, image: user.profilePicture ?? Data())
+                            if let annotationView = self?.mainView?.mapView.view(for: ann) {
+                                self?.updateUserAnnotationView(annotationView)
+                            }
+                        }
+                    })
                 }
             case .failure(let error):
                 print("ошибка получения профиля для MainVC \(error)")
             }
         }
 
+    }
+
+    private func updateUserAnnotationView(_ annotationView: MKAnnotationView) {
+        annotationView.subviews.forEach { $0.removeFromSuperview() }
+        if let profileAnnotationView = self.profileAnnotationView {
+            annotationView.addSubview(profileAnnotationView)
+        }
     }
 
 
@@ -140,6 +155,7 @@ class MainController: UIViewController {
                     let userAnnotation = UserAnnotation(name: friend.name, profilePicture: friend.profilePicture ?? Data(), pointAnnotation: annotation)
                     annotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                     annotation.title = friend.name
+                    annotation.subtitle = friend.safeEmail
                     self.mainView?.mapView.addAnnotation(annotation)
                     self.friendAnnotations[friend.name] = userAnnotation
                 }
@@ -199,7 +215,6 @@ extension MainController: MainViewDelegate {
     }
 
     func drawRoute(routeArray: [[String: Double]]) {
-
         var cnt = 0
         for dict in routeArray {
             if let latitude = dict["latitude"], let longitude = dict["longitude"] {
@@ -207,7 +222,7 @@ extension MainController: MainViewDelegate {
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = coordinate
                 annotation.title = "traces\(cnt)"
-
+                
                 mainView?.mapView.addAnnotation(annotation)
                 cnt += 1
             }
@@ -226,6 +241,14 @@ extension MainController: MainViewDelegate {
 
 
 extension MainController: MainViewModelDelegate {
+
+//    func showLocationErrorVC() {
+//        print("aaaaAAAAAAAAAAKFMWEKFNOEWNFOUEWNFOUWENFJUNBWERBWGYBERU3842185978437HTYG8B32YBY524BVYV2BYB4V4BV845BV4BU4")
+//        let vc = LocationErrorController()
+////        vc.modalPresentationStyle = .fullScreen
+//        present(vc, animated: true)
+//    }
+    
     func didUpdateRegion(_ region: MKCoordinateRegion) {
         mainView?.mapView.setRegion(region, animated: true)
     }
@@ -320,7 +343,6 @@ extension MainController: MKMapViewDelegate {
         guard !(annotation is MKUserLocation) else {
             let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "UserLocation")
             annotationView.subviews.forEach { $0.removeFromSuperview() }
-
             let profileAnnotationViewOptional = AnnotationView(name: profile?.name ?? "", image: profile?.profilePicture ?? Data())
             annotationView.addSubview(profileAnnotationView ?? profileAnnotationViewOptional)
             return annotationView
@@ -369,4 +391,27 @@ extension MainController: MKMapViewDelegate {
         return nil
     }
 
+
+
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+
+        guard let annotation = view.annotation, view.annotation?.title??.starts(with: "traces") != true else { return }
+
+        let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 300, longitudinalMeters: 300)
+        mapView.setRegion(region, animated: true)
+        if view.annotation is MKUserLocation == false {
+            let safeEmail = view.annotation?.subtitle ?? ""
+            let controller = EmojiController(safeEmail: safeEmail ?? "")
+            let height = CGFloat((self.view.window?.windowScene?.screen.bounds.height)!)
+            let sheetController = SheetViewController(controller: controller, sizes: [.fixed(height / 3.3)])
+            self.present(sheetController, animated: true, completion: nil)
+        } else {
+            return
+        }
+
+    }
+
 }
+
+
+

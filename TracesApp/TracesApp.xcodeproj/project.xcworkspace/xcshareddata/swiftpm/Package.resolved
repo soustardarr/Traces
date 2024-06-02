@@ -1,5 +1,5 @@
 {
-  "originHash" : "75f456ad013cddec726736bbdcc2a1ae6e817d84c3691ae67c8eb13de1950ebc",
+  "originHash" : "835cd99eeb4056a3bf03746102c394e5bb9ee369513ea4ae0eb5c091fdbaf1df",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -26,6 +26,15 @@
       "state" : {
         "revision" : "97940381e57703c07f31a8058d8f39ec53b7c272",
         "version" : "10.25.0"
+      }
+    },
+    {
+      "identity" : "fittedsheets",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gordontucker/FittedSheets",
+      "state" : {
+        "revision" : "5d7f5a6307ad510aa05de5a4a16ac40846d3b2d3",
+        "version" : "2.6.1"
       }
     },
     {

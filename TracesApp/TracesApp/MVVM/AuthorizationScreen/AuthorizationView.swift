@@ -122,14 +122,14 @@ class AuthorizationView: UIView {
 
         NSLayoutConstraint.activate([
 
-            fieldStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            fieldStackView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -80),
             fieldStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
             fieldStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
 
             orLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            orLabel.topAnchor.constraint(equalTo: fieldStackView.bottomAnchor, constant: 40),
+            orLabel.topAnchor.constraint(equalTo: fieldStackView.bottomAnchor, constant: 10),
 
-            signUpButton.topAnchor.constraint(equalTo: orLabel.bottomAnchor, constant: 40),
+            signUpButton.topAnchor.constraint(equalTo: orLabel.bottomAnchor, constant: 10),
             signUpButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             signUpButton.widthAnchor.constraint(equalToConstant: 150),
             signUpButton.heightAnchor.constraint(equalToConstant: 50)

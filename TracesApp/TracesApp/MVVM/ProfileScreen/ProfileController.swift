@@ -90,7 +90,7 @@ extension ProfileController: UITableViewDelegate {
 
         switch indexPath.row {
         case 0:
-            print("Действие для ячейки 'подписчики'")
+            present(FollowersController(), animated: true)
         case 1:
             didTappedSignOutButton()
         default:

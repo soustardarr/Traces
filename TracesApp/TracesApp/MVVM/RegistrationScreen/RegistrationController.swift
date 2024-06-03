@@ -46,6 +46,8 @@ class RegistrationController: UIViewController, UINavigationControllerDelegate {
 extension RegistrationController: RegistrationViewDelegate {
 
     func doneSignUpButtonTapped() {
+        registrationView?.resignResponder()
+        registrationView?.hud.show(in: view, animated: true)
         viewModel?.didRegisteredUser(registrationView?.nameTextField.text,
                                      registrationView?.loginTextField.text,
                                      registrationView?.passwordTextField.text,
@@ -56,13 +58,14 @@ extension RegistrationController: RegistrationViewDelegate {
             if let user = profile {
                 strongSelf.viewModel?.setProfileInRealtimeDatabase(user: user)
                 strongSelf.viewModel?.uploadAvatarImage(user: user)
-//                strongSelf.viewModel?.setProfileInFirestore(user: user)
                 doInMainThread {
+                    self?.registrationView?.hud.dismiss()
                     strongSelf.registrationControllerCoordinator?.dismissToLastVC()
                 }
 
             } else {
                 doInMainThread {
+                    self?.registrationView?.hud.dismiss()
                     strongSelf.alertUserLoginError(message: message)
                 }
             }

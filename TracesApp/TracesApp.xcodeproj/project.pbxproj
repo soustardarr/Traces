@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7C06921A2C0A066200C00020 /* LocationMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0692192C0A066200C00020 /* LocationMethods.swift */; };
-		7C0692202C0A1EC600C00020 /* LocationErrorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C06921F2C0A1EC600C00020 /* LocationErrorController.swift */; };
-		7C0692232C0A1FC700C00020 /* LocationErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0692222C0A1FC700C00020 /* LocationErrorView.swift */; };
-		7C0692252C0A1FE500C00020 /* LocationErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0692242C0A1FE500C00020 /* LocationErrorViewModel.swift */; };
 		7C0692272C0B63D500C00020 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0692262C0B63D500C00020 /* LocationManager.swift */; };
 		7C06922D2C0CA9D900C00020 /* FittedSheets in Frameworks */ = {isa = PBXBuildFile; productRef = 7C06922C2C0CA9D900C00020 /* FittedSheets */; };
 		7C0692302C0CAA3100C00020 /* EmojiController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C06922F2C0CAA3100C00020 /* EmojiController.swift */; };
@@ -18,7 +15,11 @@
 		7C0692362C0CCDD600C00020 /* smeh.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7C0692332C0CCDD600C00020 /* smeh.mp3 */; };
 		7C0692372C0CCDD600C00020 /* zlo.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7C0692342C0CCDD600C00020 /* zlo.mp3 */; };
 		7C0692392C0CCE2600C00020 /* EmojiViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0692382C0CCE2600C00020 /* EmojiViewModel.swift */; };
-		7C06923B2C0CF7EA00C00020 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7C06923A2C0CF7EA00C00020 /* GoogleService-Info.plist */; };
+		7C0692402C0E2AC100C00020 /* FollowersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C06923F2C0E2AC100C00020 /* FollowersController.swift */; };
+		7C0692422C0E2ADD00C00020 /* FollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0692412C0E2ADD00C00020 /* FollowersView.swift */; };
+		7C0692442C0E2AED00C00020 /* FollowersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0692432C0E2AED00C00020 /* FollowersViewModel.swift */; };
+		7C0692462C0E340500C00020 /* FollowersViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0692452C0E340500C00020 /* FollowersViewCell.swift */; };
+		7C0692482C0E455400C00020 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7C0692472C0E455400C00020 /* GoogleService-Info.plist */; };
 		7C2D6F672BE502EB00C2BEC3 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F662BE502EB00C2BEC3 /* AnnotationView.swift */; };
 		7C2D6F6B2BE51DA800C2BEC3 /* UserAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F6A2BE51DA800C2BEC3 /* UserAnnotation.swift */; };
 		7C2D6F6D2BEA3CE100C2BEC3 /* ChatSUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F6C2BEA3CE100C2BEC3 /* ChatSUIView.swift */; };
@@ -109,16 +110,17 @@
 
 /* Begin PBXFileReference section */
 		7C0692192C0A066200C00020 /* LocationMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMethods.swift; sourceTree = "<group>"; };
-		7C06921F2C0A1EC600C00020 /* LocationErrorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationErrorController.swift; sourceTree = "<group>"; };
-		7C0692222C0A1FC700C00020 /* LocationErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationErrorView.swift; sourceTree = "<group>"; };
-		7C0692242C0A1FE500C00020 /* LocationErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationErrorViewModel.swift; sourceTree = "<group>"; };
 		7C0692262C0B63D500C00020 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		7C06922F2C0CAA3100C00020 /* EmojiController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiController.swift; sourceTree = "<group>"; };
 		7C0692312C0CAED500C00020 /* EmojiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiView.swift; sourceTree = "<group>"; };
 		7C0692332C0CCDD600C00020 /* smeh.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = smeh.mp3; sourceTree = "<group>"; };
 		7C0692342C0CCDD600C00020 /* zlo.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = zlo.mp3; sourceTree = "<group>"; };
 		7C0692382C0CCE2600C00020 /* EmojiViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiViewModel.swift; sourceTree = "<group>"; };
-		7C06923A2C0CF7EA00C00020 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7C06923F2C0E2AC100C00020 /* FollowersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersController.swift; sourceTree = "<group>"; };
+		7C0692412C0E2ADD00C00020 /* FollowersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersView.swift; sourceTree = "<group>"; };
+		7C0692432C0E2AED00C00020 /* FollowersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersViewModel.swift; sourceTree = "<group>"; };
+		7C0692452C0E340500C00020 /* FollowersViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersViewCell.swift; sourceTree = "<group>"; };
+		7C0692472C0E455400C00020 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7C2D6F662BE502EB00C2BEC3 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		7C2D6F6A2BE51DA800C2BEC3 /* UserAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAnnotation.swift; sourceTree = "<group>"; };
 		7C2D6F6C2BEA3CE100C2BEC3 /* ChatSUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSUIView.swift; sourceTree = "<group>"; };
@@ -222,16 +224,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		7C0692212C0A1ECB00C00020 /* LocationErrorScreen */ = {
-			isa = PBXGroup;
-			children = (
-				7C06921F2C0A1EC600C00020 /* LocationErrorController.swift */,
-				7C0692222C0A1FC700C00020 /* LocationErrorView.swift */,
-				7C0692242C0A1FE500C00020 /* LocationErrorViewModel.swift */,
-			);
-			path = LocationErrorScreen;
-			sourceTree = "<group>";
-		};
 		7C06922E2C0CAA0900C00020 /* EmojyScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -249,6 +241,17 @@
 				7C0692342C0CCDD600C00020 /* zlo.mp3 */,
 			);
 			path = Sound;
+			sourceTree = "<group>";
+		};
+		7C06923E2C0E2AA000C00020 /* FollowersScreen */ = {
+			isa = PBXGroup;
+			children = (
+				7C06923F2C0E2AC100C00020 /* FollowersController.swift */,
+				7C0692412C0E2ADD00C00020 /* FollowersView.swift */,
+				7C0692432C0E2AED00C00020 /* FollowersViewModel.swift */,
+				7C0692452C0E340500C00020 /* FollowersViewCell.swift */,
+			);
+			path = FollowersScreen;
 			sourceTree = "<group>";
 		};
 		7C2D6F6E2BEA3CEB00C2BEC3 /* ChatScreen */ = {
@@ -320,7 +323,7 @@
 				7C0692352C0CCDD600C00020 /* Sound */,
 				7C66E0A72BE109400049E75C /* Assets.xcassets */,
 				7C66E0A92BE109400049E75C /* LaunchScreen.storyboard */,
-				7C06923A2C0CF7EA00C00020 /* GoogleService-Info.plist */,
+				7C0692472C0E455400C00020 /* GoogleService-Info.plist */,
 				7C66E0AC2BE109400049E75C /* Info.plist */,
 				7C66E0A42BE1093F0049E75C /* TracesApp.xcdatamodeld */,
 				7C66E12C2BE27F070049E75C /* Extensions.swift */,
@@ -429,7 +432,6 @@
 			isa = PBXGroup;
 			children = (
 				7C06922E2C0CAA0900C00020 /* EmojyScreen */,
-				7C0692212C0A1ECB00C00020 /* LocationErrorScreen */,
 				7C864B582C08D74F0049E249 /* AnnotationViews */,
 				7C66E1152BE25B150049E75C /* MainView.swift */,
 				7C66E1172BE25B2B0049E75C /* MainController.swift */,
@@ -442,6 +444,7 @@
 		7C66E1212BE273990049E75C /* ProfileScreen */ = {
 			isa = PBXGroup;
 			children = (
+				7C06923E2C0E2AA000C00020 /* FollowersScreen */,
 				7C66E1222BE273C60049E75C /* ProfileController.swift */,
 				7C66E1242BE273E30049E75C /* ProfileView.swift */,
 				7C66E1262BE273F30049E75C /* ProfileViewModel.swift */,
@@ -594,7 +597,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C06923B2C0CF7EA00C00020 /* GoogleService-Info.plist in Resources */,
+				7C0692482C0E455400C00020 /* GoogleService-Info.plist in Resources */,
 				7C0692372C0CCDD600C00020 /* zlo.mp3 in Resources */,
 				7C66E0A82BE109400049E75C /* Assets.xcassets in Resources */,
 				7C66E0AB2BE109400049E75C /* Base in Resources */,
@@ -633,8 +636,6 @@
 				7C66E0FD2BE251980049E75C /* RegistrationController.swift in Sources */,
 				7CD345142BFB90FB005D7706 /* LastMessageEntity+CoreDataClass.swift in Sources */,
 				7C0692302C0CAA3100C00020 /* EmojiController.swift in Sources */,
-				7C0692252C0A1FE500C00020 /* LocationErrorViewModel.swift in Sources */,
-				7C0692232C0A1FC700C00020 /* LocationErrorView.swift in Sources */,
 				7CD345152BFB90FB005D7706 /* LastMessageEntity+CoreDataProperties.swift in Sources */,
 				7C66E1252BE273E30049E75C /* ProfileView.swift in Sources */,
 				7C66E13E2BE3D6F60049E75C /* PeopleProfileController.swift in Sources */,
@@ -654,6 +655,7 @@
 				7CD345172BFD02C6005D7706 /* FriendsViewCell.swift in Sources */,
 				7C66E09C2BE1093F0049E75C /* AppDelegate.swift in Sources */,
 				7C66E1052BE252D60049E75C /* RegistrationViewModel.swift in Sources */,
+				7C0692462C0E340500C00020 /* FollowersViewCell.swift in Sources */,
 				7C66E09E2BE1093F0049E75C /* SceneDelegate.swift in Sources */,
 				7C66E0F82BE24F3B0049E75C /* AppCoordinator.swift in Sources */,
 				7C0692392C0CCE2600C00020 /* EmojiViewModel.swift in Sources */,
@@ -663,13 +665,15 @@
 				7C0692272C0B63D500C00020 /* LocationManager.swift in Sources */,
 				7C66E1012BE252170049E75C /* AuthorizationView.swift in Sources */,
 				7C66E11E2BE264CB0049E75C /* MainViewModel.swift in Sources */,
+				7C0692422C0E2ADD00C00020 /* FollowersView.swift in Sources */,
 				7C66E1232BE273C60049E75C /* ProfileController.swift in Sources */,
 				7C66E1322BE3D21E0049E75C /* FriendsView.swift in Sources */,
 				7C66E1292BE27C580049E75C /* ProfileHeader.swift in Sources */,
 				7C864B5A2C08D79D0049E249 /* TracesAnnotationView.swift in Sources */,
 				7C2D6F672BE502EB00C2BEC3 /* AnnotationView.swift in Sources */,
-				7C0692202C0A1EC600C00020 /* LocationErrorController.swift in Sources */,
+				7C0692402C0E2AC100C00020 /* FollowersController.swift in Sources */,
 				7C66E1392BE3D45E0049E75C /* PeopleViewCell.swift in Sources */,
+				7C0692442C0E2AED00C00020 /* FollowersViewModel.swift in Sources */,
 				7C2D6F8A2BF3C08600C2BEC3 /* Message.swift in Sources */,
 				7C2D6F832BF35E2B00C2BEC3 /* LogChatViewModel.swift in Sources */,
 				7C66E1402BE3D7620049E75C /* PeopleProfileView.swift in Sources */,
@@ -826,6 +830,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -861,6 +866,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

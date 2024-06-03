@@ -73,4 +73,15 @@ extension RealTimeDataBaseManager {
         }
     }
 
+    func getFollowersEmails(completion: @escaping ([String]?) -> ()) {
+        let selfEmail = UserDefaults.standard.string(forKey: "safeEmail") ?? ""
+        database.child(selfEmail).child("followers").observeSingleEvent(of: .value) { snapshot in
+            guard let emails = snapshot.value as? [String] else {
+                completion(nil)
+                return
+            }
+            completion(emails)
+        }
+    }
+
 }

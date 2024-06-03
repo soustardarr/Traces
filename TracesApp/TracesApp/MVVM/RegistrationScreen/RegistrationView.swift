@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import JGProgressHUD
 
 protocol RegistrationViewDelegate: AnyObject {
 
@@ -16,6 +17,10 @@ protocol RegistrationViewDelegate: AnyObject {
 class RegistrationView: UIView {
 
     weak var delegate: RegistrationViewDelegate?
+    var hud: JGProgressHUD = {
+        let hud = JGProgressHUD(style: .light)
+        return hud
+    }()
 
     var addPhotoLabel: UILabel = {
         let label = UILabel()
@@ -31,7 +36,7 @@ class RegistrationView: UIView {
         avatarImageView.image = UIImage(systemName: "person.circle.fill")
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
         avatarImageView.layer.masksToBounds = true
-        avatarImageView.layer.cornerRadius = 100
+        avatarImageView.layer.cornerRadius = 60
         avatarImageView.layer.borderWidth = 2
         avatarImageView.layer.borderColor = UIColor.white.cgColor
         avatarImageView.isUserInteractionEnabled = true
@@ -102,12 +107,6 @@ class RegistrationView: UIView {
         return passwordTextField
     }()
 
-//    var scrollView: UIScrollView = {
-//        let scrollView = UIScrollView()
-//        scrollView.translatesAutoresizingMaskIntoConstraints = false
-//        return scrollView
-//    }()
-
 
     lazy var doneSignUpButton: UIButton = {
         let button = UIButton()
@@ -161,20 +160,20 @@ class RegistrationView: UIView {
 
 
         NSLayoutConstraint.activate([
-            
+
             addPhotoLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10),
             addPhotoLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
 
             avatarImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             avatarImageView.topAnchor.constraint(equalTo: addPhotoLabel.bottomAnchor, constant: 10),
-            avatarImageView.widthAnchor.constraint(equalToConstant: 200),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 200),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 120),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 120),
 
-            fieldStackView.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 50),
+            fieldStackView.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 10),
             fieldStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
             fieldStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
 
-            doneSignUpButton.topAnchor.constraint(equalTo: fieldStackView.bottomAnchor, constant: 40),
+            doneSignUpButton.topAnchor.constraint(equalTo: fieldStackView.bottomAnchor, constant: 20),
             doneSignUpButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             doneSignUpButton.widthAnchor.constraint(equalToConstant: 150),
             doneSignUpButton.heightAnchor.constraint(equalToConstant: 50)
@@ -200,4 +199,3 @@ extension RegistrationView: UITextFieldDelegate {
         return true
     }
 }
-

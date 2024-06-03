@@ -19,15 +19,11 @@ class ObtainFriendManager {
 
     let database = Database.database().reference()
 
-    let serialQueue = DispatchQueue(label: "Firebase.LocationManager.SerialQueue")
-
     var locationObservers: [String: DatabaseHandle] = [:]
 
     var friendsEmail: [String]? {
         didSet{
-            serialQueue.async {
-                self.obtainFriends(emails: self.friendsEmail ?? [])
-            }
+            self.obtainFriends(emails: self.friendsEmail ?? [])
         }
     }
 
@@ -77,7 +73,7 @@ class ObtainFriendManager {
                 }
             }
         }
-        dispatchGroup.notify(queue: serialQueue) {
+        dispatchGroup.notify(queue: .main) {
             self.generalFriends = users
         }
     }

@@ -203,13 +203,13 @@ extension MainController: MainViewDelegate {
     }
 
     func didTappedButtonWorld() {
-        mainView?.toggleUI()
-        RealTimeDataBaseManager.shared.obtainRouteArray { array in
-            guard let array = array else {
-                return
-            }
-            self.drawRoute(routeArray: array)
-        }
+//        mainView?.toggleUI()
+//        RealTimeDataBaseManager.shared.obtainRouteArray { array in
+//            guard let array = array else {
+//                return
+//            }
+//            self.drawRoute(routeArray: array)
+//        }
 
         
     }
@@ -242,13 +242,6 @@ extension MainController: MainViewDelegate {
 
 extension MainController: MainViewModelDelegate {
 
-//    func showLocationErrorVC() {
-//        print("aaaaAAAAAAAAAAKFMWEKFNOEWNFOUEWNFOUWENFJUNBWERBWGYBERU3842185978437HTYG8B32YBY524BVYV2BYB4V4BV845BV4BU4")
-//        let vc = LocationErrorController()
-////        vc.modalPresentationStyle = .fullScreen
-//        present(vc, animated: true)
-//    }
-    
     func didUpdateRegion(_ region: MKCoordinateRegion) {
         mainView?.mapView.setRegion(region, animated: true)
     }

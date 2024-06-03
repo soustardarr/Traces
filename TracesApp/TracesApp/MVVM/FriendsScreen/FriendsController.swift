@@ -217,14 +217,12 @@ extension FriendsController: PeopleProfileControllerDelegate {
             if friends.contains(where: { $0.safeEmail == user.safeEmail}) {
                 friends.removeAll(where: { $0.safeEmail == user.safeEmail})
                 ObtainFriendManager.shared.generalFriends?.removeAll(where: { $0.safeEmail == user.safeEmail})
-//                ObtainFriendManager.shared.removeLocationObserver(user: user)
                 self.friendsView?.friendsTableView.reloadData()
             }
         case .heSubscribedForSelf:
             if friends.contains(where: { $0.safeEmail == user.safeEmail}) {
                 friends.removeAll(where: { $0.safeEmail == user.safeEmail})
                 ObtainFriendManager.shared.generalFriends?.removeAll(where: { $0.safeEmail == user.safeEmail})
-//                ObtainFriendManager.shared.removeLocationObserver(user: user)
                 self.friendsView?.friendsTableView.reloadData()
             }
         case .inFriends:

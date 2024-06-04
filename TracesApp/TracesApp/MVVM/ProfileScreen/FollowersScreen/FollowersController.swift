@@ -37,8 +37,6 @@ class FollowersController: UIViewController {
 
         }
     }
-
-
 }
 
 

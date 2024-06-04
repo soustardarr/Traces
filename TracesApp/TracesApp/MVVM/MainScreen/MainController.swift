@@ -64,8 +64,8 @@ class MainController: UIViewController {
 
     
     private func obtainProfile() {
+        ObtainFriendManager.shared.setupFriendsEmailsObserver()
         let safeEmail = UserDefaults.standard.string(forKey: "safeEmail") ?? ""
-        ObtainFriendManager.shared.obtainEmails()
         RealTimeDataBaseManager.shared.getProfileInfo(safeEmail: safeEmail) { [ weak self ] result in
             switch result {
             case .success(let user):
@@ -140,8 +140,7 @@ class MainController: UIViewController {
             if let location = friend.location,
                let latitude = location["latitude"],
                let longitude = location["longitude"] {
-                print("\(latitude), \(longitude) \(friend.safeEmail)")
-
+//                print("\(latitude), \(longitude) \(friend.safeEmail)")
                 if let existingAnnotation = self.mainView?.mapView.annotations.first(where: { $0.title == friend.name }) as? MKPointAnnotation {
                     existingAnnotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                     // Обновляем дополнительные представления аннотации

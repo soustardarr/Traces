@@ -15,6 +15,7 @@ class ProfileViewModel {
         UserDefaults.standard.removeObject(forKey: "safeEmail")
         ObtainFriendManager.shared.removeAllLocationObservers()
         ObtainFriendManager.shared.generalFriends?.removeAll()
+        ObtainFriendManager.shared.friendsEmails?.removeAll()
         CoreDataManager.shared.deleteAllInfo()
         do {
             try FirebaseAuth.Auth.auth().signOut()

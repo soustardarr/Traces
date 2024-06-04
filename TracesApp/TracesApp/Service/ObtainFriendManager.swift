@@ -7,7 +7,7 @@
 
 import Foundation
 import FirebaseDatabase
-import Combine 
+import Combine
 
 enum LocationManagerError: Error {
     case failedReceivingFriendsEmails
@@ -21,15 +21,24 @@ class ObtainFriendManager {
 
     var locationObservers: [String: DatabaseHandle] = [:]
 
-    var friendsEmail: [String]? {
-        didSet{
-            self.obtainFriends(emails: self.friendsEmail ?? [])
+    private var cancellable = Set<AnyCancellable>()
+
+    //    var friendsEmail: [String]? {
+    //        didSet{
+    //            self.obtainFriends(emails: self.friendsEmail ?? [])
+    //        }
+    //    }
+
+    var friendsEmails: [String]? {
+        didSet {
+            self.obtainFriends(emails: friendsEmails ?? [])
         }
     }
 
     @Published var generalFriends: [User]? {
         didSet {
-//            print("\(generalFriends)!!!!!!!!!!!!!!!!")
+            //            print("\(generalFriends)!!!!!!!!!!!!!!!!")
+
             setupLocationObserver()
         }
     }
@@ -37,46 +46,110 @@ class ObtainFriendManager {
     var userLocationUpdate: User? {
         didSet {
             locationUpdateForActiveUser?(userLocationUpdate ?? User(name: "", email: ""))
-//            print("\(userLocationUpdate?.location) \(userLocationUpdate?.name)")
         }
     }
 
     var locationUpdateForActiveUser: ((User) -> ())?
 
 
-    func obtainEmails() {
-        RealTimeDataBaseManager.shared.getEmailFriends { result in
-            switch result {
-            case .success(let emails):
-                self.friendsEmail = emails
-            case .failure(let error):
-                print("не удалось получить емайлы друзей, error: \(error)")
+    func setupFriendsEmailsObserver() {
+        guard let safeEmail = UserDefaults.standard.string(forKey: "safeEmail") else {
+            return
+        }
+        database.child(safeEmail).child("friends").observe(.value) { snapshot in
+            guard let emails = snapshot.value as? [String] else {
+                return
+            }
+            if self.friendsEmails == nil {
+                self.friendsEmails = emails
+            } else {
+                emails.forEach { email in
+                    if let emailsArray = self.friendsEmails, !emailsArray.contains(email) {
+                        self.friendsEmails?.append(email)
+                    }
+                }
+
             }
         }
 
     }
+
+
+    //    func obtainEmails() {
+    //        RealTimeDataBaseManager.shared.getEmailFriends { result in
+    //            switch result {
+    //            case .success(let emails):
+    //                self.friendsEmail = emails
+    //            case .failure(let error):
+    //                print("не удалось получить емайлы друзей, error: \(error)")
+    //            }
+    //        }
+    //
+    //    }
 
     func obtainFriends(emails: [String]) {
-        var users: [User] = []
-        let dispatchGroup = DispatchGroup()
-        for email in emails {
-            dispatchGroup.enter()
-            RealTimeDataBaseManager.shared.getProfileInfo(safeEmail: email) { result in
-                defer {
-                    dispatchGroup.leave()
-                }
-                switch result {
-                case .success(let friend):
-                    users.append(friend)
-                case .failure(let error):
-                    print("ошибка получения друга: \(error)")
+        if generalFriends == nil {
+            var users: [User] = []
+            let dispatchGroup = DispatchGroup()
+            for email in emails {
+                dispatchGroup.enter()
+                RealTimeDataBaseManager.shared.getProfileInfo(safeEmail: email) { result in
+                    defer {
+                        dispatchGroup.leave()
+                    }
+                    switch result {
+                    case .success(let friend):
+                        users.append(friend)
+                    case .failure(let error):
+                        print("ошибка получения друга: \(error)")
+                    }
                 }
             }
-        }
-        dispatchGroup.notify(queue: .main) {
-            self.generalFriends = users
+            dispatchGroup.notify(queue: .main) {
+                self.generalFriends = users
+            }
+
+        } else {
+            let friendsEmails = generalFriends?.compactMap { $0.safeEmail }
+            let generalEmails = emails.filter { email in
+                friendsEmails?.contains(email) == false
+            }
+            var users: [User] = []
+            let dispatchGroup = DispatchGroup()
+            for email in generalEmails {
+                dispatchGroup.enter()
+                RealTimeDataBaseManager.shared.getProfileInfo(safeEmail: email) { result in
+                    defer {
+                        dispatchGroup.leave()
+                    }
+                    switch result {
+                    case .success(let friend):
+                        users.append(friend)
+                    case .failure(let error):
+                        print("ошибка получения друга: \(error)")
+                    }
+                }
+            }
+            dispatchGroup.notify(queue: .main) {
+                let selfEmail = UserDefaults.standard.string(forKey: "safeEmail") ?? ""
+                let emailsFriend = self.generalFriends?.compactMap { $0.safeEmail }
+                for user in users {
+                    if emailsFriend?.contains(user.safeEmail) != true, let friends = user.friends {
+                        var friend = user
+                        friend.friends?.append(selfEmail)
+                        self.generalFriends?.append(friend)
+                    } else if  emailsFriend?.contains(user.safeEmail) != true {
+                        var friend = user
+                        friend.friends = [ selfEmail ]
+                        self.generalFriends?.append(friend)
+                    }
+                }
+
+            }
+
         }
     }
+
 
     func setupLocationObserver() {
         guard let friends = self.generalFriends else {
@@ -142,3 +215,25 @@ class ObtainFriendManager {
 }
 
 
+
+
+//            if generalFriends?.count ?? 0 > emails.count {
+//                let friendsEmails = generalFriends?.compactMap { $0.safeEmail }
+//                let deleteEmails = emails.filter { email in
+//                    friendsEmails?.contains(email) == true
+//                }
+//                print(emails)
+//
+//            }
+//            print(generalFriends?.count)
+//            print(emails.count)
+//            print("\(emails) +  fkmdslfmlksdmfklsdmflkdsmlkfmldskfmlksdmf")
+//            print(emails)
+//            if generalFriends?.count ?? 0 > emails.count, let friendsEmails = generalFriends?.compactMap({ $0.safeEmail }) {
+//                let emailsSet = Set(emails)
+//                let remainingFriends = generalFriends?.filter { friend in
+//                    !emailsSet.contains(friend.safeEmail)
+//                }
+//                generalFriends = remainingFriends
+//                return
+//            }

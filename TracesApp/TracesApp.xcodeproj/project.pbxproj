@@ -19,7 +19,7 @@
 		7C0692422C0E2ADD00C00020 /* FollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0692412C0E2ADD00C00020 /* FollowersView.swift */; };
 		7C0692442C0E2AED00C00020 /* FollowersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0692432C0E2AED00C00020 /* FollowersViewModel.swift */; };
 		7C0692462C0E340500C00020 /* FollowersViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0692452C0E340500C00020 /* FollowersViewCell.swift */; };
-		7C0692482C0E455400C00020 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7C0692472C0E455400C00020 /* GoogleService-Info.plist */; };
+		7C06924C2C0F870000C00020 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7C06924B2C0F870000C00020 /* GoogleService-Info.plist */; };
 		7C2D6F672BE502EB00C2BEC3 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F662BE502EB00C2BEC3 /* AnnotationView.swift */; };
 		7C2D6F6B2BE51DA800C2BEC3 /* UserAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F6A2BE51DA800C2BEC3 /* UserAnnotation.swift */; };
 		7C2D6F6D2BEA3CE100C2BEC3 /* ChatSUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D6F6C2BEA3CE100C2BEC3 /* ChatSUIView.swift */; };
@@ -120,7 +120,7 @@
 		7C0692412C0E2ADD00C00020 /* FollowersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersView.swift; sourceTree = "<group>"; };
 		7C0692432C0E2AED00C00020 /* FollowersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersViewModel.swift; sourceTree = "<group>"; };
 		7C0692452C0E340500C00020 /* FollowersViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersViewCell.swift; sourceTree = "<group>"; };
-		7C0692472C0E455400C00020 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7C06924B2C0F870000C00020 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7C2D6F662BE502EB00C2BEC3 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		7C2D6F6A2BE51DA800C2BEC3 /* UserAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAnnotation.swift; sourceTree = "<group>"; };
 		7C2D6F6C2BEA3CE100C2BEC3 /* ChatSUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSUIView.swift; sourceTree = "<group>"; };
@@ -323,7 +323,7 @@
 				7C0692352C0CCDD600C00020 /* Sound */,
 				7C66E0A72BE109400049E75C /* Assets.xcassets */,
 				7C66E0A92BE109400049E75C /* LaunchScreen.storyboard */,
-				7C0692472C0E455400C00020 /* GoogleService-Info.plist */,
+				7C06924B2C0F870000C00020 /* GoogleService-Info.plist */,
 				7C66E0AC2BE109400049E75C /* Info.plist */,
 				7C66E0A42BE1093F0049E75C /* TracesApp.xcdatamodeld */,
 				7C66E12C2BE27F070049E75C /* Extensions.swift */,
@@ -597,8 +597,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C0692482C0E455400C00020 /* GoogleService-Info.plist in Resources */,
 				7C0692372C0CCDD600C00020 /* zlo.mp3 in Resources */,
+				7C06924C2C0F870000C00020 /* GoogleService-Info.plist in Resources */,
 				7C66E0A82BE109400049E75C /* Assets.xcassets in Resources */,
 				7C66E0AB2BE109400049E75C /* Base in Resources */,
 				7C0692362C0CCDD600C00020 /* smeh.mp3 in Resources */,
